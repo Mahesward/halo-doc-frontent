@@ -1,0 +1,283 @@
+import React, { useState } from 'react';
+import axios from 'axios';
+import { toast } from 'react-hot-toast';
+import cloudinary from 'cloudinary-core';
+import Navbar from '../components/Navbar/Navbar'
+import { useNavigate } from 'react-router-dom'
+
+function DoctorForm() {
+
+    const navigate = useNavigate()
+
+    const [firstName, setFirstName] = useState('')
+    const [lastName, setLastname] = useState('')
+    const [email, setEmail] = useState('')
+    const [phone, setPhone] = useState('')
+    const [department, setDepartment] = useState('')
+    const [role, setRole] = useState('')
+    const [address, setAddress] = useState('')
+    const [profile, setProfile] = useState('')
+    const [AuthEmail, setAuthEmail] = useState('')
+    const [password, setPassword] = useState('')
+    const [confirmPassword, setConfirmPassword] = useState('')
+    const [AuthPhone, setAuthPhone] = useState('')
+    const [image, setImage] = useState('')
+
+
+    const submitHandler = async (e) => {
+        e.preventDefault()
+        let data = {
+            firstName,
+            lastName,
+            email,
+            phone,
+            department,
+            role,
+            address,
+            profile,
+            AuthEmail,
+            password,
+            AuthPhone,
+        }
+
+        if (!(firstName && lastName && email && phone && department && role && address && profile && AuthEmail && password && confirmPassword && AuthPhone)) {
+            toast.error('please fill all fields')
+            return
+        }
+        if (password !== confirmPassword) {
+            toast.error('password does not match')
+            return
+        }
+
+        const file = new FormData()
+        file.append("file", image)
+
+        file.append("upload_preset", "halo-doc")
+        file.append("cloud_name", "halo-doc")
+        file.append("api_key", import.meta.env.CLOUDINARY_API_KEY);
+
+        axios.post("https://api.cloudinary.com/v1_1/halo-doc/image/upload/", file, {
+            headers: {
+                'Content-Type': 'multipart/form-data'
+            }
+        }).then((res) => {
+            console.log(res, 'res')
+            data.photoURL = res.data.secure_url
+            axios.post(`${import.meta.env.VITE_ADMIN_API_URL}/doctor/add-doctor`, data, {
+                headers: {
+                    Authorization: `Bearer ${localStorage.getItem('token')}`,
+                }
+            }).then((res) => {
+                if (res.data.success) {
+                    console.log(res)
+                    toast.success(res.data.message)
+                    navigate('/admin/doctors')
+                }
+            })
+
+        }).catch(err => console.log(err, 'error'))
+    }
+
+    return (
+        <div>
+            <Navbar />
+            <>
+                <section className="bg-gray-100">
+                    <div className="mx-auto max-w-screen-xl px-4 py-16 sm:px-6 lg:px-8">
+                        <h1 className='text-2xl font-semibold mb-12'>Add Doctor</h1>
+                        <div className="grid grid-cols-1 gap-x-16 gap-y-8">
+
+                            <div className="rounded-lg bg-white p-8 shadow-lg lg:col-span-3 lg:p-12">
+                                <h3 className='text-xl font-medium mb-4'>Personal Information</h3>
+                                <form action="" className="space-y-4">
+                                    <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                                        <div>
+                                            <label className="sr-only" htmlFor="FirstName">First Name</label>
+                                            <input
+                                                className="w-full rounded-lg border-gray-200 p-3 text-sm"
+                                                placeholder="First Name"
+                                                type="text"
+                                                id="firstName"
+                                                value={firstName}
+                                                onChange={(e) => setFirstName(e.target.value)}
+                                            />
+                                        </div>
+
+                                        <div>
+                                            <label className="sr-only" htmlFor="phone">Last Name</label>
+                                            <input
+                                                className="w-full rounded-lg border-gray-200 p-3 text-sm"
+                                                placeholder="Last Name"
+                                                type="text"
+                                                id="lastName"
+                                                value={lastName}
+                                                onChange={(e) => setLastname(e.target.value)}
+                                            />
+                                        </div>
+                                    </div>
+
+                                    <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                                        <div>
+                                            <label className="sr-only" htmlFor="email">Email</label>
+                                            <input
+                                                className="w-full rounded-lg border-gray-200 p-3 text-sm"
+                                                placeholder="Email address"
+                                                type="email"
+                                                id="email"
+                                                value={email}
+                                                onChange={(e) => setEmail(e.target.value)}
+                                            />
+                                        </div>
+
+                                        <div>
+                                            <label className="sr-only" htmlFor="phone">Phone</label>
+                                            <input
+                                                className="w-full rounded-lg border-gray-200 p-3 text-sm"
+                                                placeholder="Phone Number"
+                                                type="number"
+                                                id="phone"
+                                                value={phone}
+                                                onChange={(e) => setPhone(e.target.value)}
+                                            />
+                                        </div>
+                                    </div>
+
+                                    <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                                        <div>
+                                            <label className="sr-only" htmlFor="email">Department</label>
+                                            <input
+                                                className="w-full rounded-lg border-gray-200 p-3 text-sm"
+                                                placeholder="Department"
+                                                type="text"
+                                                id="department"
+                                                value={department}
+                                                onChange={(e) => setDepartment(e.target.value)}
+                                            />
+                                        </div>
+
+                                        <div>
+                                            <label className="sr-only" htmlFor="phone">Role</label>
+                                            <input
+                                                className="w-full rounded-lg border-gray-200 p-3 text-sm"
+                                                placeholder="Role"
+                                                type="text"
+                                                id="role"
+                                                value={role}
+                                                onChange={(e) => setRole(e.target.value)}
+                                            />
+                                        </div>
+                                    </div>
+
+
+
+                                    <div className='grid grid-cols-1 gap-4 sm:grid-cols-2'>
+                                        <label className="sr-only" htmlFor="message">Address</label>
+
+                                        <textarea
+                                            className="w-full rounded-lg border-gray-200 p-3 text-sm"
+                                            placeholder="Address"
+                                            rows="8"
+                                            id="address"
+                                            value={address}
+                                            onChange={(e) => setAddress(e.target.value)}
+                                        ></textarea>
+
+                                        <label className="sr-only" htmlFor="message">Profile</label>
+
+                                        <textarea
+                                            className="w-full rounded-lg border-gray-200 p-3 text-sm"
+                                            placeholder="Profile"
+                                            rows="8"
+                                            id="Profile"
+                                            value={profile}
+                                            onChange={(e) => setProfile(e.target.value)}
+                                        ></textarea>
+                                    </div>
+                                    <div className="w-full px-4 md:w-1/2 ">
+                                        <div className="mb-12">
+                                            <label htmlFor="" className="mb-3 block text-base font-medium text-black">
+                                                Default file input
+                                            </label>
+                                            <input
+                                                type="file"
+                                                className="border-form-stroke text-body-color placeholder-body-color focus:border-primary active:border-primary file:border-form-stroke file:text-body-color file:hover:bg-primary w-full cursor-pointer rounded-lg border-[1.5px] font-medium outline-none transition file:mr-5 file:border-collapse file:cursor-pointer file:border-0 file:border-r file:border-solid file:bg-[#F5F7FD] file:py-3 file:px-5 file:hover:bg-opacity-10 disabled:cursor-default disabled:bg-[#F5F7FD]"
+                                                onChange={(e) => setImage(e.target.files[0])}
+                                            />
+                                        </div>
+                                    </div>
+
+                                    <h3 className='text-xl font-medium'>Authenticaiton Information</h3>
+
+                                    <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                                        <div>
+                                            <label className="sr-only" htmlFor="authemail">Email</label>
+                                            <input
+                                                className="w-full rounded-lg border-gray-200 p-3 text-sm"
+                                                placeholder="Email address"
+                                                type="email"
+                                                id="authEmail"
+                                                value={AuthEmail}
+                                                onChange={(e) => setAuthEmail(e.target.value)}
+                                            />
+                                        </div>
+
+                                        <div>
+                                            <label className="sr-only" htmlFor="phone">Password</label>
+                                            <input
+                                                className="w-full rounded-lg border-gray-200 p-3 text-sm"
+                                                placeholder="Password"
+                                                type="Password"
+                                                id="Password"
+                                                value={password}
+                                                onChange={(e) => setPassword(e.target.value)}
+                                            />
+                                        </div>
+                                    </div>
+
+                                    <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                                        <div>
+                                            <label className="sr-only" htmlFor="email">Confirm Password</label>
+                                            <input
+                                                className="w-full rounded-lg border-gray-200 p-3 text-sm"
+                                                placeholder="Confirm Password"
+                                                type="Password"
+                                                id="confirmPassword"
+                                                value={confirmPassword}
+                                                onChange={(e) => setConfirmPassword(e.target.value)}
+                                            />
+                                        </div>
+
+                                        <div>
+                                            <label className="sr-only" htmlFor="phone">Phone</label>
+                                            <input
+                                                className="w-full rounded-lg border-gray-200 p-3 text-sm"
+                                                placeholder="Phone Number"
+                                                type="number"
+                                                id="authPhone"
+                                                value={AuthPhone}
+                                                onChange={(e) => setAuthPhone(e.target.value)}
+                                            />
+                                        </div>
+                                    </div>
+
+                                    <div className="mt-4">
+                                        <button
+                                            type="submit"
+                                            className="inline-block w-full rounded-lg bg-black px-5 py-3 font-medium text-white sm:w-auto"
+                                            onClick={(e) => submitHandler(e)}
+                                        >
+                                            Submit
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+            </>
+        </div>
+    )
+}
+
+export default DoctorForm
