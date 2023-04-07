@@ -1,50 +1,31 @@
 import React, { useEffect, useState } from "react";
 import { ArrowRightIcon, ArrowLeftIcon } from "@heroicons/react/24/outline";
-import axios from "axios";
-import { Link } from "react-router-dom";
-import { backend_api } from "../../config/axios.config";
 
+import { backend_api } from '../config/axios.config'
 
-const Table = () => {
+const Users = () => {
 
-    const [doctors, setDoctors] = useState()
+    const [userData, setUserData] = useState([])
 
     useEffect(() => {
-        const getDoctors = async () => {
-
-            try {
-                const res = await backend_api.get('/doctors/get-all-doctors', null, {
-                    headers: {
-                        Authorization: `Bearer ${localStorage.getItem('token')}`
-                    }
-                })
-
-                console.log(res.data.data)
-                setDoctors(res.data.data)
-            } catch (error) {
-                console.log(error)
-            }
+        const getUsers = async () => {
+            const users = await backend_api.get('/users/get-all-users')
+            setUserData(users.data.data)
         }
-
-        getDoctors()
+        getUsers()
     }, [])
+
     return (
         <>
-            <section className="container px-4 mx-auto py-6 w-11/12">
+            <section className="container w-11/12 px-4 mx-auto py-4">
                 <div className="flex items-center justify-between">
                     <div>
-                        <h2 className="text-2xl font-medium text-gray-800">
-                            Doctors
+                        <h2 className="text-lg font-medium text-gray-800">
+                          Users
                         </h2>
-                        <p className="mt-1 text-sm text-gray-500">
-                            This is a list of all doctors. You can add new employees, edit
-                            or delete existing ones.
+                        <p className="mt-1 text-sm text-gray-700">
+                            This is a list of all Users. You can view users, block or unblock the users.
                         </p>
-                    </div>
-                    <div>
-                        <Link to='admin/doctors/add-doctors' className="rounded-md bg-indigo-600 px-3.5 py-1.5 text-sm font-semibold leading-7 text-white hover:bg-indigo-500 ">
-                            Add
-                        </Link>
                     </div>
                 </div>
                 <div className="flex flex-col mt-6">
@@ -58,69 +39,34 @@ const Table = () => {
                                                 scope="col"
                                                 className="py-3.5 px-4 text-sm font-normal text-left rtl:text-right text-gray-500"
                                             >
-                                                <span>Doctor</span>
+                                                <span>Employee</span>
                                             </th>
-                                            <th
-                                                scope="col"
-                                                className="px-12 py-3.5 text-sm font-normal text-left rtl:text-right text-gray-500"
-                                            >
-                                                Department
-                                            </th>
-
-                                            <th
-                                                scope="col"
-                                                className="px-4 py-3.5 text-sm font-normal text-left rtl:text-right text-gray-500"
-                                            >
-                                                DOB
-                                            </th>
-
-                                            <th
-                                                scope="col"
-                                                className="px-4 py-3.5 text-sm font-normal text-left rtl:text-right text-gray-500"
-                                            >
-                                                Mobile
-                                            </th>
-                                            <th scope="col" className="relative py-3.5 px-4 text-blue-400">
-                                                <span className="sr-only ">Edit</span>
+                                            <th scope="col" className="relative py-3.5 px-4">
+                                                <span className="sr-only">BLOCK</span>
                                             </th>
                                         </tr>
                                     </thead>
                                     <tbody className="bg-white divide-y divide-gray-200">
-                                        {doctors && doctors.map((doctor) => (
-                                            <tr key={doctor.firstName} >
-                                                <td className="py-4 px-4 whitespace-nowrap"
-                                                // {{ console.log(doctor.name)}}
-                                                >
+                                        {userData && userData.map((user) => (
+                                            <tr key={user.name}>
+                                                <td className="py-4 px-4 whitespace-nowrap">
                                                     <div className="flex items-center">
                                                         <div className="flex-shrink-0 h-10 w-10">
                                                             <img
                                                                 className="h-10 w-10 rounded-full object-cover"
-                                                                src={doctor.photoURL}
+                                                                src={user.profileURL}
                                                                 alt=""
                                                             />
                                                         </div>
                                                         <div className="ml-4">
                                                             <div className="text-sm font-medium text-gray-900">
-                                                                {doctor.firstName + " " + doctor.lastName}
+                                                                {user.name}
                                                             </div>
                                                             <div className="text-sm text-gray-500">
-                                                                {doctor.email}
+                                                                {user.email}
                                                             </div>
                                                         </div>
                                                     </div>
-                                                </td>
-                                                <td className="px-12 py-4 whitespace-nowrap">
-                                                    <div className="text-sm text-gray-900">
-                                                        {doctor.department}
-                                                    </div>
-                                                </td>
-                                                <td className="px-4 py-4 whitespace-nowrap">
-                                                    <span className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
-                                                        Active
-                                                    </span>
-                                                </td>
-                                                <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-500">
-                                                    {doctor.phone}
                                                 </td>
                                                 <td className="px-4 py-4 whitespace-nowrap text-right text-sm font-medium">
                                                     <a
@@ -141,7 +87,7 @@ const Table = () => {
                 <div className="flex items-center justify-between mt-6">
                     <a
                         href="#"
-                        className="flex items-center px-5 py-2 text-sm text-gray-700 capitalize transition-colors duration-200 bg-white border rounded-md gap-x-2 hover:bg-gray-10"
+                        className="flex items-center px-5 py-2 text-sm text-gray-700 capitalize transition-colors duration-200 bg-white border rounded-md gap-x-2 hover:bg-gray-100"
                     >
                         <ArrowLeftIcon className="w-4 h-4" />
                         <span>previous</span>
@@ -193,15 +139,15 @@ const Table = () => {
                     </div>
                     <a
                         href="#"
-                        className="flex items-center px-5 py-2 text-sm text-gray-700 capitalize transition-colors duration-200 bg-white border rounded-md gap-x-2 hover:bg-gray-10"
+                        className="flex items-center px-5 py-2 text-sm text-gray-700 capitalize transition-colors duration-200 bg-white border rounded-md gap-x-2 hover:bg-gray-100"
                     >
                         <span>Next</span>
                         <ArrowRightIcon className="w-4 h-4" />
                     </a>
                 </div>
-            </section >
+            </section>
         </>
     );
 };
 
-export default Table;
+export default Users;

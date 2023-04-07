@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
-import axios from 'axios';
+import { backend_api, cloudinary_upload } from '../config/axios.config';
 import { toast } from 'react-hot-toast';
-import cloudinary from 'cloudinary-core';
 import Navbar from '../components/Navbar/Navbar'
 import { useNavigate } from 'react-router-dom'
+import cloudinary from 'cloudinary-core';
 
 function DoctorForm() {
 
@@ -14,7 +14,7 @@ function DoctorForm() {
     const [email, setEmail] = useState('')
     const [phone, setPhone] = useState('')
     const [department, setDepartment] = useState('')
-    const [role, setRole] = useState('')
+    const [dob, setDob] = useState('')
     const [address, setAddress] = useState('')
     const [profile, setProfile] = useState('')
     const [AuthEmail, setAuthEmail] = useState('')
@@ -32,7 +32,7 @@ function DoctorForm() {
             email,
             phone,
             department,
-            role,
+            dob,
             address,
             profile,
             AuthEmail,
@@ -40,7 +40,7 @@ function DoctorForm() {
             AuthPhone,
         }
 
-        if (!(firstName && lastName && email && phone && department && role && address && profile && AuthEmail && password && confirmPassword && AuthPhone)) {
+        if (!(firstName && lastName && email && phone && department && dob && address && profile && AuthEmail && password && confirmPassword && AuthPhone)) {
             toast.error('please fill all fields')
             return
         }
@@ -48,34 +48,46 @@ function DoctorForm() {
             toast.error('password does not match')
             return
         }
+        if (image.size > 1000000) {
+            toast.error("File size is 1mb")
+            return
+        }
 
         const file = new FormData()
         file.append("file", image)
 
-        file.append("upload_preset", "halo-doc")
+        file.append("upload_preset", "halo-doc-doctor-profile")
         file.append("cloud_name", "halo-doc")
         file.append("api_key", import.meta.env.CLOUDINARY_API_KEY);
 
-        axios.post("https://api.cloudinary.com/v1_1/halo-doc/image/upload/", file, {
+
+        const cloudLink = await cloudinary_upload.post('/upload', file, {
             headers: {
                 'Content-Type': 'multipart/form-data'
             }
-        }).then((res) => {
-            console.log(res, 'res')
-            data.photoURL = res.data.secure_url
-            axios.post(`${import.meta.env.VITE_ADMIN_API_URL}/doctor/add-doctor`, data, {
+        })
+
+        data.photoURL = cloudLink.data.secure_url
+
+        try {
+
+            const res = await backend_api.post('/doctors/add-doctors', data, {
                 headers: {
                     Authorization: `Bearer ${localStorage.getItem('token')}`,
                 }
-            }).then((res) => {
-                if (res.data.success) {
-                    console.log(res)
-                    toast.success(res.data.message)
-                    navigate('/admin/doctors')
-                }
             })
 
-        }).catch(err => console.log(err, 'error'))
+            if (res.data.success) {
+                toast.success(res.data.message)
+                navigate('/admin/doctors')
+            } else {
+                toast.error(res.data.message)
+            }
+
+        } catch (error) {
+            console.log(error)
+        }
+
     }
 
     return (
@@ -156,14 +168,14 @@ function DoctorForm() {
                                         </div>
 
                                         <div>
-                                            <label className="sr-only" htmlFor="phone">Role</label>
+                                            <label className="sr-only" htmlFor="phone">DOB</label>
                                             <input
                                                 className="w-full rounded-lg border-gray-200 p-3 text-sm"
                                                 placeholder="Role"
-                                                type="text"
-                                                id="role"
-                                                value={role}
-                                                onChange={(e) => setRole(e.target.value)}
+                                                type="date"
+                                                id="dob"
+                                                value={dob}
+                                                onChange={(e) => setDob(e.target.value)}
                                             />
                                         </div>
                                     </div>

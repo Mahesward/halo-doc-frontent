@@ -4,16 +4,24 @@ import toast from 'react-hot-toast';
 import { Link, useNavigate } from 'react-router-dom';
 import { signInWithPopup, GoogleAuthProvider, createUserWithEmailAndPassword, updateProfile, } from "firebase/auth";
 import { authConfig } from '../configs/firebase.config'
+import { user_api } from "../configs/axios.config";
+import { useDispatch } from "react-redux";
+import { hideLoading, showLoading } from "../redux/alertSlice";
 
 
 const Signup = () => {
+
   const [userName, setUserName] = useState("");
   const [password, setPassword] = useState("");
   const [email, setEmail] = useState("");
   const navigate = useNavigate()
+  const dispatch = useDispatch()
 
   const signInUser = async (type) => {
     try {
+
+      dispatch(showLoading())
+
       const response = type === 'email'
         ? await createUserWithEmailAndPassword(authConfig, email, password)
         : await signInWithPopup(authConfig, new GoogleAuthProvider());
@@ -30,21 +38,26 @@ const Signup = () => {
 
       if (idToken) {
 
-        axios.post(`${import.meta.env.VITE_API_URL}/signup`, data).then((response) => {
+        try {
+          const response = await user_api.post('/signup', data)
           console.log(response)
           if (response.data.success) {
+            dispatch(hideLoading())
             toast.success(response.data.message)
             localStorage.setItem("token", response.data.token)
             navigate('/')
           }
-        })
+
+        } catch (error) {
+          dispatch(hideLoading())
+          console.log(error)
+        }
       }
 
     } catch (error) {
-      let message = error.message
-      message.split('auth/')[1]
-      toast.error(message)
       console.log(error)
+      dispatch(hideLoading())
+      toast.error(error.code?.split('/')?.[1]?.split("-")?.join(" "));
     }
   }
 

@@ -3,7 +3,10 @@ import { Link, useNavigate } from "react-router-dom";
 import { toast } from 'react-hot-toast'
 import { signInWithPopup, GoogleAuthProvider, signInWithEmailAndPassword } from "firebase/auth";
 import { authConfig } from '../configs/firebase.config';
-import axios from 'axios'
+import {  useDispatch } from 'react-redux'
+import { hideLoading, showLoading } from "../redux/alertSlice";
+import { user_api } from "../configs/axios.config";
+
 
 function Login() {
     /*
@@ -13,10 +16,14 @@ function Login() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const navigate = useNavigate();
+    const dispatch = useDispatch()
 
 
     const loginHandler = async (type) => {
         try {
+
+            dispatch(showLoading())
+
             /**
              * *checking email login or google login 
              * */
@@ -33,22 +40,26 @@ function Login() {
 
             if (idToken) {
                 try {
-                    const response = await axios.post(`${import.meta.env.VITE_API_URL}/login`, data)
-                    console.log(response)
+
+                    const response = await user_api.post('/login', data)
+
                     if (response.data.success) {
+                        dispatch(hideLoading())
                         toast.success(response.data.message)
-                        localStorage.setItem('token',response.data.token)
+                        localStorage.setItem('token', response.data.token)
                         navigate('/')
                     }
                 } catch (error) {
                     console.log(error)
+                    dispatch(hideLoading())
                     toast.error('Login failed');
                 }
-
+                
             }
-
+            
         } catch (error) {
             console.warn(error)
+            dispatch(hideLoading())
             toast.error(error.code?.split('/')?.[1]?.split("-")?.join(" "));
         }
     };
