@@ -9,15 +9,15 @@ function Navbar() {
         <div>
 
             <nav className="bg-white w-full border-gray-200">
-                <div className="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
+                <div className="w-full flex flex-wrap items-center justify-between">
                     <Link to="https://flowbite.com/" className="flex items-center">
-                        <img src="https://flowbite.com/docs/images/logo.svg" className="h-8 mr-3" alt="Flowbite Logo" />
-                        <span className="self-center text-2xl font-semibold whitespace-nowrap">Flowbite</span>
+                        {/* <img src="https://flowbite.com/docs/images/logo.svg" className="h-8 mr-3" alt="Flowbite Logo" /> */}
+                        <span className="self-center text-2xl font-semibold whitespace-nowrap">HALO-DOC</span>
                     </Link>
                     <div className="flex items-center md:order-2">
                         <button type="button" className="flex mr-3 text-sm bg-gray-800 rounded-full md:mr-0 focus:ring-4 focus:ring-gray-300" id="user-menu-button" aria-expanded="false" data-dropdown-toggle="user-dropdown" data-dropdown-placement="bottom">
                             <span className="sr-only">Open user menu</span>
-                            <img className="w-8 h-8 rounded-full" src="/docs/images/people/profile-picture-3.jpg" alt="user photo" />
+                            <img className="w-8 h-8 rounded-full" src="#" alt="user photo" />
                         </button>
                         <div className="z-50 hidden my-4 text-base list-none bg-white divide-y divide-gray-100 rounded-lg shadow" id="user-dropdown">
                             <div className="px-4 py-3">
@@ -47,15 +47,15 @@ function Navbar() {
                     <div className="items-center justify-between hidden w-full md:flex md:w-auto md:order-1" id="mobile-menu-2">
                         <ul className="flex flex-col font-medium p-4 md:p-0 mt-4 border border-gray-100 rounded-lg bg-gray-50 md:flex-row md:space-x-8 md:mt-0 md:border-0 md:bg-white">
                             <li>
-                                <Link to="/" className="block py-2 pl-3 pr-4 text-white bg-blue-700 rounded md:bg-transparent md:text-blue-700 md:p-0" aria-current="page">Home</Link>
+                                <Link to="/doctor" className="block py-2 pl-3 pr-4 text-white bg-blue-700 rounded md:bg-transparent md:text-blue-700 md:p-0" aria-current="page">Home</Link>
                             </li>
                             <li>
-                                <Link to="/appointments" className="block py-2 pl-3 pr-4 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 ">Appoinmtents</Link>
+                                <Link to="/doctor/appointments" className="block py-2 pl-3 pr-4 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 ">Appoinmtents</Link>
                             </li>
                             <li>
                                 <Link to="#" className="block py-2 pl-3 pr-4 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 ">Services</Link>
                             </li>
-                            <li>                                                        
+                            <li>
                                 <Link to="#" className="block py-2 pl-3 pr-4 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 ">Pricing</Link>
                             </li>
                             <li>
