@@ -18,9 +18,9 @@ function Nabar() {
                 <div className="mx-auto max-w-screen-xl px-2 sm:px-6 lg:px-8">
                     <div className="flex h-16 items-center justify-between">
                         <div className="md:flex md:items-center md:gap-12">
-                            <a className="block text-teal-600 lg:text-3xl sm:text-2xl font font-medium mr-5" href="/">
+                            <Link className="block text-teal-600 lg:text-3xl sm:text-2xl font font-medium mr-5" to="/admin">
                                 HALO-DOC
-                            </a>
+                            </Link>
                         </div>
 
                         <div className="hidden md:block">
@@ -44,9 +44,9 @@ function Nabar() {
                                     <li>
                                         <a
                                             className="text-gray-500 transition hover:text-gray-500/75"
-                                            href="/"
+                                            href="/admin/users"
                                         >
-                                            History
+                                            Users
                                         </a>
                                     </li>
 

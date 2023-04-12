@@ -4,6 +4,8 @@ import DOCTORS from './Doctors'
 import ADD_DOCTORS from './Add-Doctors'
 import USERS from './Users'
 import BLOG from './Blog'
+import ADD_BLOG from './Add-Blog'
+import EDIT_BLOG from './Edit-Blog'
 
 export {
     LOGIN,
@@ -11,5 +13,7 @@ export {
     DOCTORS,
     ADD_DOCTORS,
     USERS,
-    BLOG
+    BLOG,
+    ADD_BLOG,
+    EDIT_BLOG
 }

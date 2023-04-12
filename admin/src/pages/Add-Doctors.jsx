@@ -66,7 +66,7 @@ function DoctorForm() {
                 'Content-Type': 'multipart/form-data'
             }
         })
-
+        
         data.photoURL = cloudLink.data.secure_url
 
         try {
