@@ -2,7 +2,7 @@ import React from 'react'
 import './app.css'
 import { BrowserRouter, Route, Router, Routes } from 'react-router-dom'
 import { Toaster } from 'react-hot-toast'
-import { HOME, LOGIN, SIGNUP } from './pages'
+import { BLOG, HOME, LOGIN, SIGNUP } from './pages'
 import { useSelector } from 'react-redux'
 
 
@@ -34,6 +34,9 @@ function App() {
         <Route path='/' element={<HOME />} />
         <Route path='/login' element={<LOGIN />} />
         <Route path='/signup' element={<SIGNUP />} />
+
+        <Route path='/blogs' element={<BLOG />} />
+
       </Routes>
     </BrowserRouter>
   )

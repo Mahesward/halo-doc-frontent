@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { ArrowRightIcon, ArrowLeftIcon } from '@heroicons/react/24/outline';
 import { Link } from 'react-router-dom';
 import { toast } from 'react-hot-toast';
-import { backend, commonApi } from '../configs/axios.config';
+import { backendApi, commonApi } from '../config/axios.config';
 
 function Blog() {
   const [blog, setBlog] = useState([]);
@@ -16,7 +16,7 @@ function Blog() {
   }, []);
 
   const deleteHandler = async (id) => {
-    const res = await backend.delete(`/blogs/delete-blog/${id}`);
+    const res = await backendApi.delete(`/blogs/delete-blog/${id}`);
 
     if (res.data.success) {
       toast.success(res.data.message);
@@ -32,8 +32,8 @@ function Blog() {
           <p className="mt-1 text-sm text-gray-700">You can view and edit blogs here.</p>
         </div>
         <Link
-          to="/doctor/blogs/add-blog"
-          className="rounded-md border border-indigo-600 px-3.5 py-1.5 text-base font-semibold leading-7 text-indigo-600 hover:bg-indigo-200"
+          to="/admin/blogs/add-blog"
+          className="rounded-md border border-indigo-600 px-3.5 py-1.5 text-base font-semibold leading-7 text-indigo-600 hover:bg-blue-300"
         >
           Add Blog
         </Link>
@@ -70,15 +70,15 @@ function Blog() {
                             </div>
                           </div>
                         </td>
-                        <td className="py-4 px-4 whitespace-nowrap float-left">
+                        <td className="py-4 px-4 whitespace-nowrap">
                           <div className="ml-4">
-                            <div className="text-sm text-gray-500">{blogMap.content.slice(0, 75)}......</div>
+                            <div className="text-sm text-gray-500">{blogMap.content.slice(0, 75)}....</div>
                           </div>
                         </td>
                         <td className="px-4 py-4 whitespace-nowrap text-right text-sm font-medium">
                           <span className="inline-flex divide-x overflow-hidden rounded-md border bg-white shadow-sm">
-                            <button
-                              type="button"
+                            <Link
+                              to={`/admin/blogs/edit-blog/${blogMap._id}`}
                               className="inline-block p-3 text-blue-700 hover:bg-gray-50 focus:relative"
                               title="Edit Product"
                             >
@@ -96,13 +96,12 @@ function Blog() {
                                   d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10"
                                 />
                               </svg>
-                            </button>
+                            </Link>
 
                             <button
-                              type="button"
                               className="inline-block p-3 text-red-700 hover:bg-gray-50 focus:relative"
                               title="Delete Product"
-                              onClick={() => {
+                              onClick={(e) => {
                                 deleteHandler(blogMap._id);
                               }}
                             >
@@ -132,44 +131,44 @@ function Blog() {
         </div>
       </div>
       <div className="flex items-center justify-between mt-6">
-        <p
+        <a
           href="#"
           className="flex items-center px-5 py-2 text-sm text-gray-700 capitalize transition-colors duration-200 bg-white border rounded-md gap-x-2 hover:bg-gray-100"
         >
           <ArrowLeftIcon className="w-4 h-4" />
           <span>previous</span>
-        </p>
+        </a>
 
         <div className="items-center hidden md:flex gap-x-3">
-          <p href="#" className="px-2 py-1 text-sm text-blue-500 rounded-md bg-blue-100/60">
+          <a href="#" className="px-2 py-1 text-sm text-blue-500 rounded-md bg-blue-100/60">
             1
-          </p>
-          <p href="#" className="px-2 py-1 text-sm text-gray-500 rounded-md hover:bg-gray-100">
+          </a>
+          <a href="#" className="px-2 py-1 text-sm text-gray-500 rounded-md hover:bg-gray-100">
             2
-          </p>
-          <p href="#" className="px-2 py-1 text-sm text-gray-500 rounded-md hover:bg-gray-100">
+          </a>
+          <a href="#" className="px-2 py-1 text-sm text-gray-500 rounded-md hover:bg-gray-100">
             3
-          </p>
-          <p href="#" className="px-2 py-1 text-sm text-gray-500 rounded-md hover:bg-gray-100">
+          </a>
+          <a href="#" className="px-2 py-1 text-sm text-gray-500 rounded-md hover:bg-gray-100">
             ...
-          </p>
-          <p href="#" className="px-2 py-1 text-sm text-gray-500 rounded-md hover:bg-gray-100">
+          </a>
+          <a href="#" className="px-2 py-1 text-sm text-gray-500 rounded-md hover:bg-gray-100">
             12
-          </p>
-          <p href="#" className="px-2 py-1 text-sm text-gray-500 rounded-md hover:bg-gray-100">
+          </a>
+          <a href="#" className="px-2 py-1 text-sm text-gray-500 rounded-md hover:bg-gray-100">
             13
-          </p>
-          <p href="#" className="px-2 py-1 text-sm text-gray-500 rounded-md hover:bg-gray-100">
+          </a>
+          <a href="#" className="px-2 py-1 text-sm text-gray-500 rounded-md hover:bg-gray-100">
             14
-          </p>
+          </a>
         </div>
-        <p
+        <a
           href="#"
           className="flex items-center px-5 py-2 text-sm text-gray-700 capitalize transition-colors duration-200 bg-white border rounded-md gap-x-2 hover:bg-gray-100"
         >
           <span>Next</span>
           <ArrowRightIcon className="w-4 h-4" />
-        </p>
+        </a>
       </div>
     </section>
   );

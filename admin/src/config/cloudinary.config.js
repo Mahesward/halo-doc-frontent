@@ -1,8 +1,8 @@
-import cloudinary from 'cloudinary'
-// Configuration 
+import cloudinary from 'cloudinary-core';
+// Configuration
 cloudinary.config({
-    cloud_name: import.meta.env.CLOUDINARY_CLOUD_NAME,
-    api_key: import.meta.env.CLOUDINARY_API_KEY,
-    api_secret: import.meta.env.CLOUDINARY_API_SECRET
+  cloud_name: import.meta.env.CLOUDINARY_CLOUD_NAME,
+  api_key: import.meta.env.CLOUDINARY_API_KEY,
+  api_secret: import.meta.env.CLOUDINARY_API_SECRET,
 });
-export default cloudinary
+export default cloudinary;
