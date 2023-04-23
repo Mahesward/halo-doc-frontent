@@ -1,12 +1,7 @@
 import React, { useState } from 'react';
 import toast from 'react-hot-toast';
 import { Link, useNavigate } from 'react-router-dom';
-import {
-  signInWithPopup,
-  GoogleAuthProvider,
-  createUserWithEmailAndPassword,
-  updateProfile 
-} from 'firebase/auth';
+import { signInWithPopup, GoogleAuthProvider, createUserWithEmailAndPassword, updateProfile } from 'firebase/auth';
 import { useDispatch } from 'react-redux';
 import { hideLoading, showLoading } from '../redux/alertSlice';
 import { authConfig } from '../configs/firebase.config';
@@ -23,9 +18,10 @@ function Signup() {
     try {
       dispatch(showLoading());
 
-      const response = type === 'email'
-        ? await createUserWithEmailAndPassword(authConfig, email, password)
-        : await signInWithPopup(authConfig, new GoogleAuthProvider());
+      const response =
+        type === 'email'
+          ? await createUserWithEmailAndPassword(authConfig, email, password)
+          : await signInWithPopup(authConfig, new GoogleAuthProvider());
 
       userName &&
         (await updateProfile(authConfig.currentUser, {

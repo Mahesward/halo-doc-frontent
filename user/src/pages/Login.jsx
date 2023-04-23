@@ -25,25 +25,23 @@ function Login() {
        * *checking email login or google login
        * */
 
-      const response =
-        type === 'email'
-          ? await signInWithEmailAndPassword(authConfig, email, password)
-          : await signInWithPopup(authConfig, new GoogleAuthProvider());
+      const response = type === 'email'
+        ? await signInWithEmailAndPassword(authConfig, email, password)
+        : await signInWithPopup(authConfig, new GoogleAuthProvider());
 
       const idToken = await response.user.getIdToken();
-
       const data = {
         idToken,
       };
 
       if (idToken) {
         try {
-          const response = await userApi.post('/login', data);
+          const APIresponse = await userApi.post('/login', data);
 
-          if (response.data.success) {
+          if (APIresponse.data.success) {
             dispatch(hideLoading());
-            toast.success(response.data.message);
-            localStorage.setItem('token', response.data.token);
+            toast.success(APIresponse.data.message);
+            localStorage.setItem('token', APIresponse?.data?.token);
             navigate('/');
           }
         } catch (error) {

@@ -1,11 +1,12 @@
 import React from 'react';
-import { NAVBAR } from '../components';
+import { CARDS, NAVBAR, SLIDER } from '../components';
 
 function Home() {
   return (
     <>
       <NAVBAR />
-      <h1>HOME</h1>
+      <SLIDER />
+      <CARDS />
     </>
   );
 }
