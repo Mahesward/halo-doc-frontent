@@ -1,19 +1,18 @@
-import React from 'react';
+import React, { Suspense } from 'react';
 import { Toaster } from 'react-hot-toast';
 import { useSelector } from 'react-redux';
-import {
-  BrowserRouter,
-  Route,
-  Routes,
-} from 'react-router-dom';
-
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import {
   APPOINTMENTS,
   BLOG,
   DOCTORS,
   HOME,
   LOGIN,
+  PAYMENT_SUCCESS,
+  PROFILE,
   SIGNUP,
+  VIEW_APPOINTMENT,
+  CHAT,
 } from './pages';
 import './app.css';
 
@@ -37,14 +36,20 @@ function App() {
       <div>
         <Toaster position="top-center" reverseOrder={false} />
       </div>
-      <Routes>
-        <Route path="/" element={<HOME />} />
-        <Route path="/login" element={<LOGIN />} />
-        <Route path="/signup" element={<SIGNUP />} />
-        <Route path="/blogs" element={<BLOG />} />
-        <Route path="/book-appointment" element={<APPOINTMENTS />} />
-        <Route path="/doctors" element={<DOCTORS />} />
-      </Routes>
+      <Suspense fallback={<div className="loader" />}>
+        <Routes>
+          <Route path="/" element={<HOME />} />
+          <Route path="/login" element={<LOGIN />} />
+          <Route path="/signup" element={<SIGNUP />} />
+          <Route path="/blogs" element={<BLOG />} />
+          <Route path="/book-appointment" element={<APPOINTMENTS />} />
+          <Route path="/doctors" element={<DOCTORS />} />
+          <Route path="/profile" element={<PROFILE />} />
+          <Route path="/view-appointment" element={<VIEW_APPOINTMENT />} />
+          <Route path="/success" element={<PAYMENT_SUCCESS />} />
+          <Route path="/chat" element={<CHAT />} />
+        </Routes>
+      </Suspense>
     </BrowserRouter>
   );
 }

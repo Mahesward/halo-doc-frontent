@@ -4,7 +4,7 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "vite",
+    "dev": "vite --port 5175",
     "build": "vite build",
     "preview": "vite preview",
     "lint": "eslint ."
@@ -21,7 +21,10 @@
     "react-redux": "^8.0.5",
     "react-router-dom": "^6.10.0",
     "redux": "^4.2.1",
-    "redux-toolkit": "^1.1.2"
+    "redux-persist": "^6.0.0",
+    "redux-toolkit": "^1.1.2",
+    "socket.io-client": "^4.6.1",
+    "yup": "^1.1.1"
   },
   "devDependencies": {
     "@types/react": "^18.0.28",

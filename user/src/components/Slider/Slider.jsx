@@ -2,62 +2,59 @@ import React from 'react';
 
 function Slider() {
   return (
-    <div>
-      <div id="controls-carousel" className="relative w-full" data-carousel="static">
-        <div className="relative h-56 overflow-hidden rounded-lg md:h-96">
-          <div className="hidden duration-700 ease-in-out bg-slider-bg" data-carousel-item>
-            <img
-              className="absolute block w-full -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2 bg-slider_bg"
-              alt="..."
-            />
-          </div>
-          <div className="hidden duration-700 ease-in-out" data-carousel-item="active">
-            <img
-              className="absolute block w-full -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2 bg-slider_bg"
-              alt="..."
-            />
+    <>
+      <nav className="bg-white shadow-xl text-gray-600 h-16 border border-b border-gray-200 flex items-center px-8 justify-center">
+        <ul className="flex space-x-16 ">
+          <li>
+            <a className="text-md hover:text-gray-700 font-semibold" href="#">
+              Home
+            </a>
+          </li>
+          <li>
+            <a className="text-md hover:text-gray-700 font-semibold" href="#">
+              About
+            </a>
+          </li>
+          <li>
+            <a className="text-md hover:text-gray-700 font-semibold" href="#">
+              Company
+            </a>
+          </li>
+          <li>
+            <a className="text-md hover:text-gray-700 font-semibold" href="#">
+              Pricing
+            </a>
+          </li>
+          <li>
+            <a className="text-md hover:text-gray-700 font-semibold" href="#">
+              Github
+            </a>
+          </li>
+        </ul>
+      </nav>
+
+      <div className="relative isolate px-6 pt-14 lg:px-8 bg-white">
+        <div className="mx-auto max-w-2xl py-32 sm:py-48 lg:py-56">
+          <div className="text-center">
+            <h1 className="text-4xl font-bold tracking-tight text-gray-900 sm:text-6xl">
+              Lorem ipsum dolor sit amet consectetur dicta.
+            </h1>
+            <p className="mt-6 text-lg leading-8 text-gray-600">
+              Anim aute id magna aliqua ad ad non deserunt sunt. Qui irure qui lorem cupidatat commodo. Elit sunt
+              amet fugiat veniam occaecat fugiat aliqua.
+            </p>
+            <div className="mt-10 flex items-center justify-center gap-x-6">
+              <a href="#" className="rounded-md bg-indigo-600 px-3.5 py-2.5 text-sm font-semibold text-white">
+                Buy Now
+              </a>
+              <a href="#" className="text-sm font-semibold leading-6 text-gray-900 hover:underline">
+                Get Started
+              </a>
+            </div>
           </div>
         </div>
-        <button
-          type="button"
-          className="absolute top-0 left-0 z-30 flex items-center justify-center h-full px-4 cursor-pointer group focus:outline-none"
-          data-carousel-prev
-        >
-          <span className="inline-flex items-center justify-center w-10 h-10 rounded-full bg-white/30 dark:bg-gray-800/30 group-hover:bg-white/50 dark:group-hover:bg-gray-800/60 group-focus:ring-4 group-focus:ring-white dark:group-focus:ring-gray-800/70 group-focus:outline-none">
-            <svg
-              aria-hidden="true"
-              className="w-6 h-6 text-white dark:text-gray-800"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path strokeLinecap="round" strokestrokeLinejoin="round" strokeWidth="2" d="M15 19l-7-7 7-7" />
-            </svg>
-            <span className="sr-only">Previous</span>
-          </span>
-        </button>
-        <button
-          type="button"
-          className="absolute top-0 right-0 z-30 flex items-center justify-center h-full px-4 cursor-pointer group focus:outline-none"
-          data-carousel-next
-        >
-          <span className="inline-flex items-center justify-center w-10 h-10 rounded-full bg-white/30 dark:bg-gray-800/30 group-hover:bg-white/50 dark:group-hover:bg-gray-800/60 group-focus:ring-4 group-focus:ring-white dark:group-focus:ring-gray-800/70 group-focus:outline-none">
-            <svg
-              aria-hidden="true"
-              className="w-6 h-6 text-white dark:text-gray-800"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7" />
-            </svg>
-            <span className="sr-only">Next</span>
-          </span>
-        </button>
       </div>
-    </div>
+    </>
   );
 }
 

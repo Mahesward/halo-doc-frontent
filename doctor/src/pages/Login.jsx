@@ -1,12 +1,16 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
 import { toast } from 'react-hot-toast';
 import { backend } from '../configs/axios.config';
+import { addData } from '../redux/userSlice';
 
 function Login() {
+  const dispatch = useDispatch();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const navigate = useNavigate();
+
   const loginHandler = async (e) => {
     e.preventDefault();
 
@@ -17,8 +21,10 @@ function Login() {
     try {
       const response = await backend.post('/login', data);
 
-      if (response.data.success === true) {
+      if (response.data.success) {
         toast.success('Doctor Login Successfull');
+        localStorage.setItem('token', response.data.token);
+        dispatch(addData([response.data.doctor]));
         navigate('/doctor');
       } else {
         toast.error('Internal server Error');

@@ -1,12 +1,13 @@
 import React from 'react';
-import { CARDS, NAVBAR, SLIDER } from '../components';
+import { CARDS, FEATURES_CARD, FOOTER, NAVBAR, SLIDER, STATS, TEAM } from '../components';
 
 function Home() {
   return (
     <>
-      <NAVBAR />
       <SLIDER />
-      <CARDS />
+      <FEATURES_CARD />
+      <TEAM />
+      <FOOTER />
     </>
   );
 }

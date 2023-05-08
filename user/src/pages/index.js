@@ -1,9 +1,15 @@
-import HOME from './Home';
-import LOGIN from './Login';
-import SIGNUP from './Signup';
-import BLOG from './Blog';
-import APPOINTMENTS from './Appointments';
-import DOCTORS from './Doctors';
+import { lazy } from 'react';
+
+const HOME = lazy(() => import('./Home'));
+const LOGIN = lazy(() => import('./Login'));
+const SIGNUP = lazy(() => import('./Signup'));
+const BLOG = lazy(() => import('./Blog'));
+const APPOINTMENTS = lazy(() => import('./Appointments'));
+const DOCTORS = lazy(() => import('./Doctors'));
+const VIEW_APPOINTMENT = lazy(() => import('./View_appointments'));
+const PROFILE = lazy(() => import('./Profile'));
+const PAYMENT_SUCCESS = lazy(() => import('./PaymentSuccess'));
+const CHAT = lazy(() => import('./Chat'));
 
 export {
   HOME,
@@ -12,4 +18,8 @@ export {
   BLOG,
   APPOINTMENTS,
   DOCTORS,
+  PROFILE,
+  VIEW_APPOINTMENT,
+  PAYMENT_SUCCESS,
+  CHAT,
 };

@@ -1,17 +1,18 @@
 import { configureStore } from '@reduxjs/toolkit';
 import { persistStore, persistReducer } from 'redux-persist';
+import storage from 'redux-persist/lib/storage';
 import { combineReducers } from 'redux';
 import { alertSlice } from './alertSlice';
-import { userDataSlice } from './userDataSlice';
+import { userSlice } from './userDataSlice';
 
 const rootReducer = combineReducers({
   alerts: alertSlice.reducer,
-  // userData: persistReducer({ key: 'userData', storage }, userDataSlice.reducer),
+  data: persistReducer({ key: 'data', storage }, userSlice.reducer),
 });
 
 const store = configureStore({
   reducer: rootReducer,
 });
 
-export const presistor = persistStore(store);
+export const persistor = persistStore(store);
 export default store;

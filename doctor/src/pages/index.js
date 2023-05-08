@@ -1,8 +1,14 @@
-import HOME from './Home';
-import LOGIN from './Login';
-import APPOINTMENTS from './Appointments';
-import ADD_BLOG from './Add_Blog';
-import BLOGS from './Blogs';
+import { lazy } from 'react';
+
+const HOME = lazy(() => import('./Home'));
+const LOGIN = lazy(() => import('./Login'));
+const APPOINTMENTS = lazy(() => import('./Appointments'));
+const ADD_BLOG = lazy(() => import('./Add_Blog'));
+const BLOGS = lazy(() => import('./Blogs'));
+const VIEW_APPOINTMENT = lazy(() => import('./View_Appointment'));
+const PROFILE = lazy(() => import('./Profile'));
+const EDIT_PROFILE = lazy(() => import('./Edit_Profile'));
+const CHAT = lazy(() => import('./Chat'));
 
 export {
   HOME,
@@ -10,4 +16,8 @@ export {
   APPOINTMENTS,
   BLOGS,
   ADD_BLOG,
+  VIEW_APPOINTMENT,
+  PROFILE,
+  EDIT_PROFILE,
+  CHAT,
 };

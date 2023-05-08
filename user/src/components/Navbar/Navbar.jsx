@@ -1,15 +1,11 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { SIDEBAR } from '../';
 
 function Navbar() {
-  const [sidebarActive, setSidebarActive] = useState(false);
-
   return (
     <div className="py-1">
       <nav className="relative px-4 py-2 flex justify-between items-center border-y border-gray-500">
-        <div className="lg:hidden " onClick={() => setSidebarActive(true)}>
-          {sidebarActive && <SIDEBAR />}
+        <div className="lg:hidden ">
           <button className="navbar-burger flex items-center text-gray-600 p-3" type="button">
             <svg className="block h-4 w-4 fill-current" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
               <title>Mobile menu</title>
@@ -22,7 +18,7 @@ function Navbar() {
         </Link>
         <ul className="hidden lg:flex lg:items-center grow mx-10 space-x-6">
           <li>
-            <Link className="text-base text-gray-700 hover:text-gray-800" to="#">
+            <Link className="text-base text-gray-700 hover:text-gray-800" to="/">
               Home
             </Link>
           </li>
@@ -39,7 +35,7 @@ function Navbar() {
             </svg>
           </li>
           <li>
-            <Link className="text-sm  text-indigo-600 font-bold" to="#">
+            <Link className="text-sm  text-indigo-600 font-bold" to="/book-appointment">
               About Us
             </Link>
           </li>

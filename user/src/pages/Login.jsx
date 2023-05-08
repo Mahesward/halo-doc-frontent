@@ -4,6 +4,7 @@ import { toast } from 'react-hot-toast';
 import { signInWithPopup, GoogleAuthProvider, signInWithEmailAndPassword } from 'firebase/auth';
 import { useDispatch } from 'react-redux';
 import { hideLoading, showLoading } from '../redux/alertSlice';
+import { addData } from '../redux/userDataSlice';
 import { authConfig } from '../configs/firebase.config';
 import { userApi } from '../configs/axios.config';
 
@@ -39,8 +40,9 @@ function Login() {
           const APIresponse = await userApi.post('/login', data);
 
           if (APIresponse.data.success) {
-            dispatch(hideLoading());
             toast.success(APIresponse.data.message);
+            dispatch(hideLoading());
+            dispatch(addData(APIresponse.data.user));
             localStorage.setItem('token', APIresponse?.data?.token);
             navigate('/');
           }
