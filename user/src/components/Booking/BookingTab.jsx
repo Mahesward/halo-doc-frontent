@@ -64,7 +64,7 @@ function BookingTab() {
       date: '',
       time: '10am-12am',
       userId: userData?._id,
-      price: '900',
+      price: '',
     },
     validationSchema: APPOINTMENT_SCHEMA,
     onSubmit: async () => {
@@ -99,7 +99,7 @@ function BookingTab() {
   };
 
   const times = {
-    normal: ['9am--10am', '10am-11am', '11am-12am', '12am-1am', '3pm-4pm', '4pm-5pm', '5pm-6pm'],
+    normal: ['9am-10am', '10am-11am', '11am-12am', '12pm-1pm', '3pm-4pm', '4pm-5pm', '5pm-6pm'],
     afterNoon: ['2pm-3pm', '3pm-4pm', '4pm-5pm', '5pm-6pm'],
     evening: ['6pm-7pm', '7pm-8pm', '8pm-9pm', '9pm-10pm', '10pm-11pm'],
   };
@@ -140,26 +140,16 @@ function BookingTab() {
 
   const handlePayment = async () => {
     try {
+      if (formik.errors) {
+        console.log(formik.errors);
+        toast.error('please fill all fields');
+      }
       const res = await userApi.post('/payment', formik.values);
-      console.log(res.data);
       if (res.data.url) {
         window.location.href = res.data.url;
       }
     } catch (error) {
       console.log(error);
-    }
-  };
-
-  const makePayment = (token) => {
-    const data = {
-      token,
-      bookingId: formik.values.bookingId,
-    };
-    console.log(token);
-
-    const res = userApi.post('/payment', data);
-    if (res.success) {
-      toast.success('appoinmtent success');
     }
   };
 
@@ -235,10 +225,10 @@ function BookingTab() {
         if (tabActive === 'info') {
           return (
             <div className="sm:w-full md:w-7/12 mx-auto text-center bg-white sm:p-8">
-              <h5 className="mb-2 text-3xl font-bold text-gray-900 dark:text-white">Work fast from anywhere</h5>
-              <p className="mb-10 text-base text-gray-500 sm:text-lg dark:text-gray-400">
-                Stay up to date and move work forward with Flowbite on iOS & Android. Download the app today.
-              </p>
+              <h5 className="mb-2 text-3xl font-bold text-gray-900 dark:text-white">
+                Fill the form details to continue
+              </h5>
+              <p className="mb-10 text-base text-gray-500 sm:text-lg dark:text-gray-400"></p>
 
               <form>
                 <div className="grid md:grid-cols-2 md:gap-6">
@@ -439,8 +429,14 @@ function BookingTab() {
                   className="mt-6 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
                   onClick={() => {
                     console.log(formik.errors);
-                    if (formik.errors.date === 'Select a date' && formik.errors.gender == null) {
+                    if (
+                      formik.errors.date === 'Select a date' &&
+                      !formik.errors.gender &&
+                      !formik.errors.department
+                    ) {
                       handleTabClick('doctor');
+                    } else {
+                      toast.error('please fill all fileds');
                     }
                   }}
                 >
@@ -457,10 +453,10 @@ function BookingTab() {
           return (
             <>
               <div className="sm:w-full md:w-7/12 mx-auto text-center bg-white sm:p-8">
-                <h5 className="mb-2 text-3xl font-bold text-gray-900 dark:text-white">Work fast from anywhere</h5>
-                <p className="mb-10 text-base text-gray-500 sm:text-lg dark:text-gray-400">
-                  Stay up to date and move work forward with Flowbite on iOS & Android. Download the app today.
-                </p>
+                <h5 className="mb-2 text-3xl font-bold text-gray-900 dark:text-white">
+                  Please select A doctor to continue
+                </h5>
+                <p className="mb-10 text-base text-gray-500 sm:text-lg dark:text-gray-400"></p>
 
                 <div className="grid grid-cols-2 gap-6">
                   {doctors.map((data) => (
@@ -485,15 +481,23 @@ function BookingTab() {
                         </div>
                       </div>
 
-                      <div className="mt-4">
-                        <p className="max-w-[40ch] text-sm text-gray-500">{data.profile}</p>
+                      <div className="mt-4 flex flex-col text-start">
+                        <p className="max-w-[40ch] text-sm text-gray-500">
+                          Doctor's Name : {`${data.firstName} ${data.lastName}`}
+                        </p>
+                        <p className="max-w-[40ch] text-sm text-gray-500">Fees : {data.fees}</p>
+                        <p className="max-w-[40ch] text-sm text-gray-500">Department : {data.department}</p>
+                        <p className="max-w-[40ch] text-sm text-gray-500">
+                          Available time slot : {data.workTime === 'normal' ? 'Day Time' : data.workTime}
+                        </p>
                       </div>
                       <button
-                        className="text-body-color hover:border-primary hover:bg-primary inline-block rounded-full border border-[#E5E7EB] py-2 px-7 text-base font-medium transition hover:text-white"
+                        className="mt-4  text-body-color hover:border-primary hover:bg-primary inline-block rounded-full border border-[#E5E7EB] py-2 px-7 text-base font-medium transition hover:text-white"
                         type="button"
                         onClick={() => {
                           formik.values.doctorName = data.firstName;
                           formik.values.doctorId = data._id;
+                          formik.values.price = data.fees;
                           setSelectedDoctor(data);
                           setDoctorTime(data.workTime);
                         }}

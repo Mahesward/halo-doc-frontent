@@ -1,9 +1,10 @@
 import React from 'react';
-import { CHAT } from '../components';
+import { CHAT, NAVBAR } from '../components';
 
 function Chat() {
   return (
     <>
+      <NAVBAR />
       <CHAT />
     </>
   );

@@ -1,15 +1,17 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { toast } from 'react-hot-toast';
+import { useSelector } from 'react-redux';
 import { ArrowRightIcon, ArrowLeftIcon } from '@heroicons/react/24/outline';
 import { backend } from '../../configs/axios.config';
 
 function AppointmentList() {
   const [appointment, setAppointment] = useState([]);
+  const user = useSelector((state) => state.data.value)[0];
 
   useEffect(() => {
     const getAppointments = async () => {
-      const res = await backend.get('/appointment/get-appointments?id=642e9dcd2a3c22246a499af4');
+      const res = await backend.get(`/appointment/get-appointments/${user?._id}`);
       if (res.data.success) setAppointment(res.data.data);
     };
     getAppointments();
@@ -81,7 +83,7 @@ function AppointmentList() {
                     {appointment.map((data) => (
                       <tr key={data._id}>
                         <td className="pr-12 pl-5 whitespace-nowrap text-start">
-                          <div className="text-sm text-gray-900">{data.name}</div>
+                          <div className="text-sm text-gray-900">{`${data.firstName} ${data.lastName}`}</div>
                           <div className="text-sm text-gray-500">{`${data.age} ${data.gender}`}</div>
                         </td>
                         <td className="pr-12 pl-5 whitespace-nowrap text-start">
@@ -119,46 +121,6 @@ function AppointmentList() {
               </div>
             </div>
           </div>
-        </div>
-        <div className="flex items-center justify-between mt-6">
-          <Link
-            to="/ds"
-            className="flex items-center px-5 py-2 text-sm text-gray-700 capitalize transition-colors duration-200 bg-white border rounded-md gap-x-2 hover:bg-gray-100"
-          >
-            <ArrowLeftIcon className="w-4 h-4" />
-            <span>previous</span>
-          </Link>
-
-          <div className="items-center hidden md:flex gap-x-3">
-            <Link to="/ds" className="px-2 py-1 text-sm text-blue-500 rounded-md bg-blue-100/60">
-              1
-            </Link>
-            <Link to="/ds" className="px-2 py-1 text-sm text-gray-500 rounded-md hover:bg-gray-100">
-              2
-            </Link>
-            <Link to="/ds" className="px-2 py-1 text-sm text-gray-500 rounded-md hover:bg-gray-100">
-              3
-            </Link>
-            <Link to="/ds" className="px-2 py-1 text-sm text-gray-500 rounded-md hover:bg-gray-100">
-              ...
-            </Link>
-            <Link to="/ds" className="px-2 py-1 text-sm text-gray-500 rounded-md hover:bg-gray-100">
-              12
-            </Link>
-            <Link to="/ds" className="px-2 py-1 text-sm text-gray-500 rounded-md hover:bg-gray-100">
-              13
-            </Link>
-            <Link to="/ds" className="px-2 py-1 text-sm text-gray-500 rounded-md hover:bg-gray-100">
-              14
-            </Link>
-          </div>
-          <Link
-            to="/ds"
-            className="flex items-center px-5 py-2 text-sm text-gray-700 capitalize transition-colors duration-200 bg-white border rounded-md gap-x-2 hover:bg-gray-100"
-          >
-            <span>Next</span>
-            <ArrowRightIcon className="w-4 h-4" />
-          </Link>
         </div>
       </section>
     </>

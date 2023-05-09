@@ -9,7 +9,7 @@ function Profile() {
 
   useEffect(() => {
     const getAppointments = async () => {
-      const res = await backend.get('/appointment/get-appointments?id=642e9dcd2a3c22246a499af4');
+      const res = await backend.get(`/appointment/get-appointments/${profileData._id}`);
       if (res.data.success) setAppointment(res.data.data);
     };
     getAppointments();
@@ -33,17 +33,14 @@ function Profile() {
 
       <div className="grid md:grid-cols-3 gap-6">
         <div className="w-full max-w-sm ml-4 p-4 bg-white border border-gray-200 rounded-lg shadow sm:p-6">
-          <h5 className="mb-3 text-base font-semibold text-gray-900 md:text-xl">Connect wallet</h5>
-          <p className="text-sm font-normal text-gray-500">
-            Connect with one of our available wallet providers or create Link new one.
-          </p>
+          <h5 className="mb-3 text-base font-semibold text-gray-900 md:text-xl">Notificaitons</h5>
           <ul className="my-4 space-y-3">
             <li>
               <Link
                 to="/"
                 className="flex items-center p-3 text-base font-bold text-gray-900 rounded-lg bg-gray-50 hover:bg-gray-100 group hover:shadow"
               >
-                <span className="flex-1 ml-3 whitespace-nowrap">Coinbase Wallet</span>
+                <span className="flex-1 ml-3 whitespace-nowrap">Notification (1) </span>
               </Link>
             </li>
           </ul>
@@ -116,7 +113,7 @@ function Profile() {
 
         <div className="w-full max-w-md mr-6 p-4 bg-white border border-gray-200 rounded-lg shadow sm:p-8">
           <div className="flex items-center justify-between mb-4">
-            <h5 className="text-xl font-bold leading-none text-gray-900">Latest Customers</h5>
+            <h5 className="text-xl font-bold leading-none text-gray-900">Latest Bookings</h5>
             <Link to="/doctor/appointments" className="text-sm font-medium text-blue-600 hover:underline">
               View all
             </Link>
@@ -128,7 +125,7 @@ function Profile() {
                   <li className="py-3 sm:py-4">
                     <div className="flex items-center space-x-4">
                       <div className="flex-1 min-w-0">
-                        <p className="text-sm font-medium text-gray-900 truncate ">{data.name}</p>
+                        <p className="text-sm font-medium text-gray-900 truncate ">{`${data.firstName} ${data.lastName}`}</p>
                         <p className="text-sm text-gray-500 truncate">{data.email}</p>
                       </div>
                       <div className="inline-flex items-center text-base font-semibold text-gray-900 ">

@@ -153,46 +153,6 @@ function Table() {
           </div>
         </div>
       </div>
-      <div className="flex items-center justify-between mt-6">
-        <p
-          href="#"
-          className="flex items-center px-5 py-2 text-sm text-gray-700 capitalize transition-colors duration-200 bg-white border rounded-md gap-x-2 hover:bg-gray-10"
-        >
-          <ArrowLeftIcon className="w-4 h-4" />
-          <span>previous</span>
-        </p>
-
-        <div className="items-center hidden md:flex gap-x-3">
-          <p href="#" className="px-2 py-1 text-sm text-blue-500 rounded-md bg-blue-100/60">
-            1
-          </p>
-          <p href="#" className="px-2 py-1 text-sm text-gray-500 rounded-md hover:bg-gray-100">
-            2
-          </p>
-          <p href="#" className="px-2 py-1 text-sm text-gray-500 rounded-md hover:bg-gray-100">
-            3
-          </p>
-          <p href="#" className="px-2 py-1 text-sm text-gray-500 rounded-md hover:bg-gray-100">
-            ...
-          </p>
-          <p href="#" className="px-2 py-1 text-sm text-gray-500 rounded-md hover:bg-gray-100">
-            12
-          </p>
-          <p href="#" className="px-2 py-1 text-sm text-gray-500 rounded-md hover:bg-gray-100">
-            13
-          </p>
-          <p href="#" className="px-2 py-1 text-sm text-gray-500 rounded-md hover:bg-gray-100">
-            14
-          </p>
-        </div>
-        <p
-          href="#"
-          className="flex items-center px-5 py-2 text-sm text-gray-700 capitalize transition-colors duration-200 bg-white border rounded-md gap-x-2 hover:bg-gray-10"
-        >
-          <span>Next</span>
-          <ArrowRightIcon className="w-4 h-4" />
-        </p>
-      </div>
     </section>
   );
 }

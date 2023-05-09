@@ -10,7 +10,7 @@ function stats() {
               Loved by over 5 new customers every minute
             </h2>
             <p className="mt-3 text-xl text-gray-500 sm:mt-4">
-              Lorem ipsum dolor, sit amet consectetur adipisicing elit. Repellendus repellat laudantium.
+              Most Trusted Online Doctor Consultancy Platform. Available All Over the World.
             </p>
           </div>
         </div>

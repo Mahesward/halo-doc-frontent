@@ -10,6 +10,7 @@ const VIEW_APPOINTMENT = lazy(() => import('./View_appointments'));
 const PROFILE = lazy(() => import('./Profile'));
 const PAYMENT_SUCCESS = lazy(() => import('./PaymentSuccess'));
 const CHAT = lazy(() => import('./Chat'));
+const VIDEO_CALL = lazy(() => import('./Video_Call'));
 
 export {
   HOME,
@@ -22,4 +23,5 @@ export {
   VIEW_APPOINTMENT,
   PAYMENT_SUCCESS,
   CHAT,
+  VIDEO_CALL,
 };

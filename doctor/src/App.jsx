@@ -2,7 +2,7 @@ import React, { useEffect, Suspense } from 'react';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import { Toaster } from 'react-hot-toast';
 import Sidebar from './components/Sidebar/Sidebar';
-import { ADD_BLOG, APPOINTMENTS, BLOGS, CHAT, EDIT_PROFILE, HOME, LOGIN, PROFILE } from './pages';
+import { ADD_BLOG, APPOINTMENTS, BLOGS, CHAT, EDIT_PROFILE, HOME, LOGIN, PROFILE, VIDEO_CALL } from './pages';
 import './app.css';
 
 function App() {
@@ -27,7 +27,7 @@ function App() {
         </div>
 
         <Suspense fallback={<div className="loader" />}>
-          <div className={shouldRenderSideNav ? 'flex' : ''}>
+          <div className={shouldRenderSideNav ? 'flex justify-normal' : ''}>
             {shouldRenderSideNav && <Sidebar />}
 
             {/* if userData then shows pages else redirect to login page */}
@@ -41,6 +41,7 @@ function App() {
               <Route path="/doctor/profile" element={<PROFILE />} />
               <Route path="/doctor/edit-profile" element={<EDIT_PROFILE />} />
               <Route path="/doctor/chat" element={<CHAT />} />
+              <Route path="/doctor/video-call" element={<VIDEO_CALL />} />
             </Routes>
           </div>
         </Suspense>

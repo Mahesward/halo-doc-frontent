@@ -11,6 +11,7 @@ function chat() {
   const [currentChat, setCurrentChat] = useState(null);
   const [message, setMessage] = useState([]);
   const [arrivalMessage, setArrivalMessage] = useState(null);
+  const [onlineUsers, setOnlineUsers] = useState([]);
   const [messageInput, setMessageInput] = useState('');
   const user = useSelector((state) => state.data.value)[0];
 
@@ -20,7 +21,8 @@ function chat() {
 
   useEffect(() => {
     socket.on('allUsers', (users) => {
-      console.log(users);
+      console.log(users.length);
+      setOnlineUsers(users.userId);
     });
     socket.on('getMessage', (data) => {
       setArrivalMessage({
@@ -90,7 +92,7 @@ function chat() {
 
   return (
     <div>
-      <div className="flex h-screen antialiased text-gray-800">
+      <div className="flex h-screen w-full antialiased text-gray-800">
         <div className="flex flex-row h-full w-full overflow-x-hidden">
           <div className="flex flex-col py-8 pl-6 pr-2 w-64 bg-white flex-shrink-0">
             <div className="flex flex-row items-center justify-center h-12 w-full">
@@ -98,24 +100,33 @@ function chat() {
             </div>
             <div className="flex flex-col items-center bg-indigo-100 border border-gray-200 mt-4 w-full py-6 px-4 rounded-lg">
               <div className="h-20 w-20 rounded-full border overflow-hidden">
-                <img
-                  src="https://avatars3.githubusercontent.com/u/2763884?s=128"
-                  alt="Avatar"
-                  className="h-full w-full"
-                />
+                <img src={user.photoURL} alt="Avatar" className="h-full w-full" />
               </div>
-              <div className="text-sm font-semibold mt-2">{user.name}</div>
-              <div className="flex flex-row items-center mt-3">
-                <div className="flex flex-col justify-center h-4 w-8 bg-gray-500 rounded-full">
-                  <div className="h-3 w-3 bg-white rounded-full self-start mr-1" />
-                </div>
-                <div className="leading-none ml-1 text-xs">Active</div>
-              </div>
+              <div className="text-sm font-semibold mt-2">{`${user.firstName} ${user.lastName}`}</div>
             </div>
             <div className="flex flex-col mt-8">
               <div className="flex flex-row items-center justify-between text-xs">
                 <span className="font-bold">Active Conversations</span>
-                <span className="flex items-center justify-center bg-gray-300 h-4 w-4 rounded-full">4</span>
+                <span className="flex items-center justify-center bg-gray-300 h-4 w-4 rounded-full">{''}</span>
+              </div>
+              <div className="flex flex-col space-y-1 mt-4 -mx-2 h-48 overflow-y-auto">
+                {conversations.map((data, index) => (
+                  <button
+                    type="button"
+                    key={index}
+                    className="flex flex-row items-center hover:bg-gray-100 rounded-xl p-2"
+                    onClick={() => setCurrentChat(data)}
+                  >
+                    <div className="flex items-center justify-center h-8 w-8 bg-indigo-200 rounded-full">H</div>
+                    <div className="ml-2 text-sm font-semibold">Henry Boyd</div>
+                  </button>
+                ))}
+              </div>
+            </div>
+            <div className="flex flex-col mt-8">
+              <div className="flex flex-row items-center justify-between text-xs">
+                <span className="font-bold">Online Users</span>
+                <span className="flex items-center justify-center bg-gray-300 h-4 w-4 rounded-full">{''}</span>
               </div>
               <div className="flex flex-col space-y-1 mt-4 -mx-2 h-48 overflow-y-auto">
                 {conversations.map((data, index) => (

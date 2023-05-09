@@ -1,14 +1,14 @@
 import React from 'react';
-import { CARDS, FEATURES_CARD, FOOTER, NAVBAR, SLIDER, STATS, TEAM } from '../components';
+import { CARDS, FEATURES_CARD, FOOTER, SLIDER, STATS, TEAM } from '../components';
 
 function Home() {
   return (
-    <>
+    <div className="w-full">
       <SLIDER />
       <FEATURES_CARD />
-      <TEAM />
+      <STATS />
       <FOOTER />
-    </>
+    </div>
   );
 }
 

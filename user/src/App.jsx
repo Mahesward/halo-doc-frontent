@@ -13,6 +13,7 @@ import {
   SIGNUP,
   VIEW_APPOINTMENT,
   CHAT,
+  VIDEO_CALL,
 } from './pages';
 import './app.css';
 
@@ -48,6 +49,7 @@ function App() {
           <Route path="/view-appointment" element={<VIEW_APPOINTMENT />} />
           <Route path="/success" element={<PAYMENT_SUCCESS />} />
           <Route path="/chat" element={<CHAT />} />
+          <Route path="/Video-call" element={<VIDEO_CALL />} />
         </Routes>
       </Suspense>
     </BrowserRouter>
