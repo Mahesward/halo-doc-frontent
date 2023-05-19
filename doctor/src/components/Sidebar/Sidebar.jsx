@@ -17,7 +17,7 @@ function Sidebar() {
 
   const handleSignout = () => {
     dispatch(deleteData());
-    window.localStorage.setItem('token', false);
+    window.localStorage.clear();
   };
 
   return (
@@ -59,13 +59,6 @@ function Sidebar() {
             <span className="mx-2 text-sm font-medium">Chat</span>
           </Link>
 
-          <Link
-            className="flex items-center px-3 py-2 text-gray-600 transition-colors duration-300 transform rounded-lg hover:bg-gray-100  hover:text-gray-700"
-            to="/"
-          >
-            <WrenchScrewdriverIcon className="w-5 h-5" />
-            <span className="mx-2 text-sm font-medium">Setting</span>
-          </Link>
         </nav>
         <div className="mt-6">
           <div className="flex items-center justify-between mt-6">

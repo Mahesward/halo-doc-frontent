@@ -106,7 +106,7 @@ function Users() {
                             </div>
                           </div>
                         </td>
-                        <td className="px-4 py-4 whitespace-nowrap text-right text-sm font-medium">
+                        {/* <td className="px-4 py-4 whitespace-nowrap text-right text-sm font-medium">
                           {user.blocked ? (
                             <label className="relative inline-flex items-center cursor-pointer">
                               <input
@@ -130,7 +130,7 @@ function Users() {
                           <span className="ml-3 text-sm font-medium text-gray-900 dark:text-gray-300">
                             blocked
                           </span>
-                        </td>
+                        </td> */}
                       </tr>
                     ))}
                 </tbody>

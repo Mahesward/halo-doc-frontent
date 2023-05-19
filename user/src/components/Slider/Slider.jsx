@@ -122,8 +122,8 @@ function Slider() {
       <div className="relative w-full bg-white">
         <div className="mx-auto max-w-7xl lg:px-8">
           <div className="flex flex-col justify-center px-4 py-10 lg:px-6">
-            <h1 className="mt-8 max-w-4xl text-3xl font-bold tracking-tight text-black md:text-4xl lg:text-6xl">
-              People who really cares about your business
+            <h1 className="mt-8 max-w-4xl text-2xl font-bold tracking-tight text-black md:text-4xl lg:text-6xl">
+              We Cares About Your Health
             </h1>
             <p className="mt-8 max-w-3xl text-lg text-gray-700"></p>
             <div className="mt-8">

@@ -5,7 +5,6 @@ import Table from '../components/Table/Table';
 function Doctors() {
   return (
     <div>
-      <Navbar />
       <Table />
     </div>
   );

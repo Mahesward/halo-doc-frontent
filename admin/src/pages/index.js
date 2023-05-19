@@ -6,6 +6,10 @@ import USERS from './Users';
 import BLOG from './Blogs';
 import ADD_BLOG from './Add-Blog';
 import EDIT_BLOG from './Edit-Blog';
+import PAYMENTS from './Payments';
+import REFUNDS from './Refunds';
+import FEEDBACKS from './Feedbacks';
+import ERROR_PAGE from './ErrorPage';
 
 export {
   LOGIN,
@@ -16,4 +20,8 @@ export {
   BLOG,
   ADD_BLOG,
   EDIT_BLOG,
+  PAYMENTS,
+  FEEDBACKS,
+  ERROR_PAGE,
+  REFUNDS,
 };

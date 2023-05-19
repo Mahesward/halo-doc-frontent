@@ -14,6 +14,8 @@ function BookingTab() {
   const [selectedDoctor, setSelectedDoctor] = useState([]);
   const [tabActive, setTabActive] = useState('info');
   const [doctorTime, setDoctorTime] = useState('');
+  const [selectedTime, setSelectedTime] = useState();
+  const [timings, setTimings] = useState('');
   const [dates, setDates] = useState({
     day1: '',
     day2: '',
@@ -32,10 +34,10 @@ function BookingTab() {
     getDepartment();
 
     const today = new Date();
-    const day1 = new Date(today.getTime());
-    const day2 = new Date(today.getTime() + 86400000);
-    const day3 = new Date(today.getTime() + 172800000);
-    const day4 = new Date(today.getTime() + 259200000);
+    const day1 = new Date(today.getTime() + 86400000);
+    const day2 = new Date(today.getTime() + 172800000);
+    const day3 = new Date(today.getTime() + 259200000);
+    const day4 = new Date(today.getTime() + 345600000);
 
     const datesData = {
       day1: day1.toDateString(),
@@ -62,7 +64,7 @@ function BookingTab() {
       doctorId: '',
       doctorName: '',
       date: '',
-      time: '10am-12am',
+      time: '',
       userId: userData?._id,
       price: '',
     },
@@ -98,51 +100,49 @@ function BookingTab() {
     setDoctors(res.data.data);
   };
 
-  const times = {
-    normal: ['9am-10am', '10am-11am', '11am-12am', '12pm-1pm', '3pm-4pm', '4pm-5pm', '5pm-6pm'],
-    afterNoon: ['2pm-3pm', '3pm-4pm', '4pm-5pm', '5pm-6pm'],
-    evening: ['6pm-7pm', '7pm-8pm', '8pm-9pm', '9pm-10pm', '10pm-11pm'],
-  };
+  const times = ['9am-10am', '10am-11am', '11am-12am', '12pm-1pm', '3pm-4pm', '4pm-5pm', '5pm-6pm'];
 
-  const handleChangeTime = (time) => {
-    formik.values.time = time;
+  const handleGetTimings = async (date) => {
+    const data = {
+      date,
+      doctorId: formik.values.doctorId,
+    };
+    const response = await userApi.post('/check-available-timing', data);
+    setTimings(response.data.data.map((val) => val.time));
+    console.log(timings);
   };
 
   let appointmentTimes = null;
 
-  if (doctorTime && times[doctorTime]) {
-    appointmentTimes = times[doctorTime].map((time) => (
+  appointmentTimes = times
+    .filter((time) => !timings.includes(time))
+    .map((time) => (
       <tr key={time}>
         <td>
           <button
-            className="rounded-md border border-green-600 px-3.5 py-1.5 text-base font-semibold leading-7 text-green-600 hover:bg-green-300"
+            className={`rounded-md border px-3.5 py-1.5 text-base font-semibold leading-7 ${
+              selectedTime === time
+                ? 'border-green-600 text-green-600 hover:bg-green-300'
+                : 'border-blue-600 text-blue-600 hover:bg-blue-300'
+            }  `}
             type="button"
-            onClick={() => handleChangeTime(time)}
+            onClick={() => {
+              setSelectedTime(time);
+              formik.values.time = time;
+            }}
           >
             {time}
           </button>
         </td>
       </tr>
     ));
-  } else if (!selectedDoctor) {
-    appointmentTimes = (
-      <tr>
-        <td>Please Select a doctor</td>
-      </tr>
-    );
-  } else {
-    appointmentTimes = (
-      <tr>
-        <td>unavailable</td>
-      </tr>
-    );
-  }
 
   const handlePayment = async () => {
     try {
-      if (formik.errors) {
-        console.log(formik.errors);
+      if (formik.values.date === '' || formik.values.time === '') {
         toast.error('please fill all fields');
+        console.log(formik.values);
+        return;
       }
       const res = await userApi.post('/payment', formik.values);
       if (res.data.url) {
@@ -228,149 +228,115 @@ function BookingTab() {
               <h5 className="mb-2 text-3xl font-bold text-gray-900 dark:text-white">
                 Fill the form details to continue
               </h5>
-              <p className="mb-10 text-base text-gray-500 sm:text-lg dark:text-gray-400"></p>
+              <p className="mb-10 text-base text-gray-500 sm:text-lg dark:text-gray-400" />
 
               <form>
-                <div className="grid md:grid-cols-2 md:gap-6">
-                  <div className="relative z-0 w-full mb-6 group">
-                    <span className="text-red-500 text-xs font-light text-end">{formik.errors.firstName}</span>
+                <div className="grid md:grid-cols-2 gap-4">
+                  <div className="mb-6">
+                    <div className="flex justify-between">
+                      <p className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">First Name</p>
+                      <span className="text-red-500 text-xs font-light text-end">{formik.errors.firstName}</span>
+                    </div>
                     <input
                       type="text"
-                      id="floating_first_name"
-                      className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
-                      placeholder=" "
+                      className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-sm-light"
                       name="firstName"
                       onChange={formik.handleChange}
                       value={formik.values.firstName}
                     />
-                    <p
-                      htmlFor="floating_first_name"
-                      className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
-                    >
-                      First name
-                    </p>
                   </div>
-                  <div className="relative z-0 w-full mb-6 group">
-                    <span className="text-red-500 text-xs font-light text-end">{formik.errors.lastName}</span>
+                  <div className="mb-6">
+                    <div className="flex justify-between">
+                      <p className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Last Name</p>
+                      <span className="text-red-500 text-xs font-light text-end">{formik.errors.lastName}</span>
+                    </div>
                     <input
                       type="text"
-                      id="floating_last_name"
-                      className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
-                      placeholder=" "
+                      className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-sm-light"
                       name="lastName"
                       onChange={formik.handleChange}
                       value={formik.values.lastName}
                     />
-                    <p
-                      htmlFor="floating_last_name"
-                      className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
-                    >
-                      Last name
-                    </p>
                   </div>
                 </div>
-                <div className="relative z-0 w-full mb-6 group">
-                  <span className="text-red-500 text-xs font-light text-end">{formik.errors.email}</span>
+                <div className="mb-6">
+                  <div className="flex justify-between">
+                    <p className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Email</p>
+                    <span className="text-red-500 text-xs font-light text-end">{formik.errors.email}</span>
+                  </div>
                   <input
                     type="email"
-                    id="floating_email"
-                    className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
-                    placeholder=" "
+                    className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-sm-light"
                     name="email"
                     onChange={formik.handleChange}
                     value={formik.values.email}
                   />
-                  <p
-                    htmlFor="floating_email"
-                    className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
-                  >
-                    Email address
-                  </p>
                 </div>
-                <div className="grid md:grid-cols-2 md:gap-6">
-                  <div className="relative z-0 w-full mb-6 group">
-                    <span className="text-red-500 text-xs font-light text-end">{formik.errors.mobile}</span>
+                <div className="grid md:grid-cols-2 gap-4">
+                  <div className="mb-6">
+                    <div className="flex justify-between">
+                      <p className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Mobile</p>
+                      <span className="text-red-500 text-xs font-light text-end">{formik.errors.mobile}</span>
+                    </div>
                     <input
-                      type="tel"
-                      id="floating_phone"
-                      className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
-                      placeholder=" "
+                      type="text"
+                      className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-sm-light"
                       name="mobile"
                       onChange={formik.handleChange}
                       value={formik.values.mobile}
                     />
-                    <p
-                      htmlFor="floating_phone"
-                      className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
-                    >
-                      Phone number
-                    </p>
                   </div>
-                  <div className="relative z-0 w-full mb-6 group">
-                    <span className="text-red-500 text-xs font-light text-end">{formik.errors.age}</span>
+                  <div className="mb-6">
+                    <div className="flex justify-between">
+                      <p className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Age</p>
+                      <span className="text-red-500 text-xs font-light text-end">{formik.errors.age}</span>
+                    </div>
                     <input
-                      type="tel"
-                      id="floating_phone"
-                      className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
-                      placeholder=" "
+                      type="number"
+                      className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-sm-light"
                       name="age"
                       onChange={formik.handleChange}
                       value={formik.values.age}
                     />
-                    <p
-                      htmlFor="floating_phone"
-                      className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
-                    >
-                      Age
-                    </p>
                   </div>
                 </div>
-                <div className="grid md:grid-cols-2 md:gap-6">
-                  <div className="relative z-0 w-full mb-6 group">
-                    <span className="text-red-500 text-xs font-light text-end">{formik.errors.gender}</span>
-                    <div className="flex mt-4">
-                      <div className="flex items-center mr-4 ">
+                <div className="grid md:grid-cols-2 mt-2 gap-4">
+                  <div className="mb-6 px-4">
+                    <div className="flex justify-between">
+                      <p className="block mb-4 text-sm font-medium text-gray-900 dark:text-white">Gender</p>
+                      <span className="text-red-500 text-xs font-light text-end">{formik.errors.gender}</span>
+                    </div>
+                    <div className="flex">
+                      <div className="mx-4 flex">
                         <input
-                          id="inline-radio"
                           type="radio"
-                          className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
                           name="gender"
                           value="male"
                           onChange={() => {
                             formik.values.gender = 'male';
                           }}
                         />
-                        <p
-                          htmlFor="inline-radio"
-                          className="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300"
-                        >
-                          Male
-                        </p>
+                        <p className="block ml-2 mb-2 text-sm font-medium text-gray-900 dark:text-white">Male</p>
                       </div>
-                      <div className="flex items-center mr-4">
+                      <div className="mx-4 flex">
                         <input
-                          id="inline-2-radio"
                           type="radio"
-                          className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
                           name="gender"
                           value="female"
                           onChange={() => {
                             formik.values.gender = 'female';
                           }}
                         />
-                        <p
-                          htmlFor="inline-2-radio"
-                          className="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300"
-                        >
-                          female
-                        </p>
+                        <p className="block ml-2 mb-2 text-sm font-medium text-gray-900 dark:text-white">Female</p>
                       </div>
                     </div>
                   </div>
-                  <div className="relative z-0 w-full mb-6 group">
-                    <span className="text-red-500 text-xs font-light text-end">{formik.errors.department}</span>
+                  <div className="mb-6">
+                    <div className="flex justify-between">
+                      <p className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Department</p>
+                      <span className="text-red-500 text-xs font-light text-end">{formik.errors.department}</span>
+                    </div>
                     <select
-                      id="department"
                       className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                       name="department"
                       onChange={(e) => {
@@ -423,10 +389,9 @@ function BookingTab() {
                     </div>
                   ))}
                 </div>
-
                 <button
                   type="button"
-                  className="mt-6 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+                  className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
                   onClick={() => {
                     console.log(formik.errors);
                     if (
@@ -456,7 +421,7 @@ function BookingTab() {
                 <h5 className="mb-2 text-3xl font-bold text-gray-900 dark:text-white">
                   Please select A doctor to continue
                 </h5>
-                <p className="mb-10 text-base text-gray-500 sm:text-lg dark:text-gray-400"></p>
+                <p className="mb-10 text-base text-gray-500 sm:text-lg dark:text-gray-400" />
 
                 <div className="grid grid-cols-2 gap-6">
                   {doctors.map((data) => (
@@ -548,7 +513,7 @@ function BookingTab() {
               <h3 className="mb-4  mt-4 font-semibold text-gray-900 dark:text-white">Choose Date </h3>
               <ul className="items-center  md:w-1/2 text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-lg sm:flex dark:bg-gray-700 dark:border-gray-600 dark:text-white">
                 <li className="w-auto border-b border-gray-200 sm:border-b-0 sm:border-r dark:border-gray-600">
-                  <div className="flex items-center pl-3">
+                  <div className="flex items-center pl-3" onClick={() => handleGetTimings(dates.day1)}>
                     <input
                       id="horizontal-list-radio-license"
                       type="radio"
@@ -565,7 +530,7 @@ function BookingTab() {
                   </div>
                 </li>
                 <li className="w-auto border-b border-gray-200 sm:border-b-0 sm:border-r dark:border-gray-600">
-                  <div className="flex items-center pl-3">
+                  <div className="flex items-center pl-3" onClick={() => handleGetTimings(dates.day2)}>
                     <input
                       id="horizontal-list-radio-id"
                       type="radio"
@@ -582,7 +547,7 @@ function BookingTab() {
                   </div>
                 </li>
                 <li className="w-auto border-b border-gray-200 sm:border-b-0 sm:border-r dark:border-gray-600">
-                  <div className="flex items-center pl-3">
+                  <div className="flex items-center pl-3" onClick={() => handleGetTimings(dates.day3)}>
                     <input
                       id="horizontal-list-radio-millitary"
                       type="radio"
@@ -599,7 +564,7 @@ function BookingTab() {
                   </div>
                 </li>
                 <li className="w-auto dark:border-gray-600">
-                  <div className="flex items-center pl-3">
+                  <div className="flex items-center pl-3" onClick={() => handleGetTimings(dates.day4)}>
                     <input
                       id="horizontal-list-radio-passport"
                       type="radio"

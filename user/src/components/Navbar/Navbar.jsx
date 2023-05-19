@@ -2,8 +2,9 @@ import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 
+
 function Navbar() {
-  const [isMenuOpen, setIsMenuOpen] = React.useState(false);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
   const user = useSelector((state) => state.data.value);
 
   const toggleMenu = () => {
@@ -120,9 +121,9 @@ function Navbar() {
             />
             <span className="flex flex-col">
               <span className="text-sm font-medium text-gray-900">{user.name}</span>
-              <Link to="/profile" className="text-sm font-medium text-gray-500 cursor-pointer">
+              {/* <Link to="/profile" className="text-sm font-medium text-gray-500 cursor-pointer">
                 View Profile
-              </Link>
+              </Link> */}
             </span>
           </div>
         </div>

@@ -1,5 +1,6 @@
 import React from 'react';
-import { CARDS, FEATURES_CARD, FOOTER, SLIDER, STATS, TEAM } from '../components';
+import { FEATURES_CARD, FOOTER, SLIDER, STATS } from '../components';
+
 
 function Home() {
   return (
