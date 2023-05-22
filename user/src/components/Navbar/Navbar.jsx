@@ -121,9 +121,9 @@ function Navbar() {
             />
             <span className="flex flex-col">
               <span className="text-sm font-medium text-gray-900">{user.name}</span>
-              {/* <Link to="/profile" className="text-sm font-medium text-gray-500 cursor-pointer">
+              <Link to="/profile" className="text-sm font-medium text-gray-500 cursor-pointer">
                 View Profile
-              </Link> */}
+              </Link>
             </span>
           </div>
         </div>

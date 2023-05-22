@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { SearchIcon } from 'lucide-react';
 import { toast } from 'react-hot-toast';
 import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
@@ -8,17 +9,33 @@ import { commonApi, userApi } from '../configs/axios.config';
 function Doctors() {
   const [doctors, setDoctors] = useState([]);
   const [doctorId, setDoctorId] = useState('');
+  const [filteredDoctors, setFilteredDoctors] = useState([]);
   const [modal, setModal] = useState(false);
   const [reason, setReason] = useState('');
+  const [department, setDepartment] = useState([]);
+  const [departmentFilter, setFilterDepartment] = useState([]);
+  const [searchKeyword, setSearchKeyword] = useState('');
   const user = useSelector((state) => state.data.value);
 
   useEffect(() => {
     const getDoctors = async () => {
       const res = await commonApi.get('/get-doctors');
       setDoctors(res.data.data);
+      setFilteredDoctors(res.data.data);
+    };
+    const getDepartment = async () => {
+      const res = await commonApi.get('/get-department');
+      setDepartment(res.data.data);
     };
     getDoctors();
+    getDepartment();
   }, []);
+
+  useEffect(() => {
+    if (departmentFilter === 'all') return setFilteredDoctors(doctors);
+    const data = doctors.filter((val) => departmentFilter === val.department);
+    return setFilteredDoctors(data);
+  }, [departmentFilter]);
 
   const handleReportDoctor = async () => {
     if (!reason) return toast.error('Please Enter Reason');
@@ -28,16 +45,53 @@ function Doctors() {
       reason,
     };
     const result = await userApi.post('/report-doctor', data);
-    setModal(!modal);
     if (result.data.success) return toast.success('Reported Doctor');
+    return setModal(!modal);
+  };
+
+  const searchHandler = async () => {
+    const result = await commonApi.get(`/search-doctors?keyword=${searchKeyword}`);
+    setFilteredDoctors(result.data.result);
   };
 
   return (
     <>
       <NAVBAR />
 
+      <div className="flex max-w-full justify-between px-4">
+        <div className="mx-auto w-full max-w-full w-/2">
+          <div className="px-2 py-6">
+            <select
+              className="border-none border-0"
+              name="department"
+              id=""
+              onChange={(e) => setFilterDepartment(e.target.value)}
+            >
+              <option value="all">All</option>
+              {department.map((data) => (
+                <option key={data.name} value={data.name}>
+                  {data.name}
+                </option>
+              ))}
+            </select>
+          </div>
+        </div>
+
+        <div className="relative w-1/2 h-12 mt-4 flex items-center text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50">
+          <input
+            type="text"
+            id="default-search"
+            className="block w-full border-none outline-none hover:outline-none"
+            placeholder="Search For Users"
+            value={searchKeyword}
+            onChange={(e) => setSearchKeyword(e.target.value)}
+          />
+          <SearchIcon className="absolute right-3" onClick={(e) => searchHandler(e)} />
+        </div>
+      </div>
+
       <div className="mx-auto grid w-full max-w-7xl items-center space-y-4 px-2 py-10 md:grid-cols-2 md:gap-6 md:space-y-0 lg:grid-cols-4">
-        {doctors.map((data) => (
+        {filteredDoctors.map((data) => (
           <div key={data._id} className="rounded-md border">
             <img
               src={data.photoURL}
@@ -53,46 +107,6 @@ function Doctors() {
               </p>
               <p className="mt-3 text-sm text-gray-600">Department :{data.department}</p>
               <p className="mt-3 text-sm text-gray-600">Department :{data.worktime}</p>
-              <p className="mt-3 mb-5 text-sm text-gray-600">Fees :{data.fees}</p>
-              <button
-                type="button"
-                className="mt-4 w-full rounded-sm bg-black px-2 py-1.5 text-sm font-semibold text-white shadow-sm hover:bg-black/80 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-black"
-              >
-                Add to Cart
-              </button>
-            </div>
-          </div>
-        ))}
-      </div>
-
-      <div className="p-10 grid grid-cols-1 sm:grid-cols-1 md:grid-cols-4 lg:grid-cols-3 xl:grid-cols-3 gap-5">
-        {doctors.map((data) => (
-          <div className="w-[300px] rounded-md border" key={data._id}>
-            <img src={data.photoURL} alt="Laptop" className="h-[200px] w-full rounded-t-md object-cover" />
-            <div className="p-4">
-              <h1 className="inline-flex items-center text-lg font-semibold">
-                {`${data.firstName} ${data.lastName}`}
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="24"
-                  height="24"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  className="h-4 w-4"
-                >
-                  <line x1="7" y1="17" x2="17" y2="7" />
-                  <polyline points="7 7 17 7 17 17" />
-                </svg>
-              </h1>
-              <p className="mt-3 text-sm text-gray-600">Department :{data.department}</p>
-              <p className="mt-3 text-sm text-gray-600">
-                {/* Department : {data.worktime === 'normal' ? 'Day Time' : data.worktime} */}
-                Department :{data.worktime}
-              </p>
               <p className="mt-3 mb-5 text-sm text-gray-600">Fees :{data.fees}</p>
               <div className="flex justify-between">
                 <Link
@@ -114,7 +128,7 @@ function Doctors() {
                     viewBox="0 0 24 24"
                     strokeWidth={1.5}
                     stroke="currentColor"
-                    className="w-6 h-6 mt-6"
+                    className="w-6 h-6 mt-6 text-red-600"
                   >
                     <path
                       strokeLinecap="round"

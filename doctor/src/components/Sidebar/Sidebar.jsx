@@ -9,15 +9,13 @@ import {
   NewspaperIcon,
   ChatBubbleBottomCenterTextIcon,
 } from '@heroicons/react/24/outline';
-import { deleteData } from '../../redux/userSlice';
 
 function Sidebar() {
-  const dispatch = useDispatch();
   const userData = useSelector((state) => state?.data?.value)[0];
 
   const handleSignout = () => {
-    dispatch(deleteData());
     window.localStorage.clear();
+    window.location.replace('/doctor/login');
   };
 
   return (
@@ -58,7 +56,6 @@ function Sidebar() {
             <ChatBubbleBottomCenterTextIcon className="w-5 h-5" />
             <span className="mx-2 text-sm font-medium">Chat</span>
           </Link>
-
         </nav>
         <div className="mt-6">
           <div className="flex items-center justify-between mt-6">
