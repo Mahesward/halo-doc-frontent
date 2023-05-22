@@ -12,6 +12,7 @@ import {
 function Sidebar() {
   const handleSignout = () => {
     window.localStorage.clear();
+    window.location.replace('/admin/login');
   };
 
   return (

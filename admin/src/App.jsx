@@ -3,6 +3,7 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { Toaster } from 'react-hot-toast';
 import BottomNav from './components/Bottom_Navbar/Bottom_Navbar';
 import Sidebar from './components/Sidebar/Sidebar';
+import ProtectedRoute from './auth/ProtectedRoute';
 import {
   LOGIN,
   HOME,
@@ -19,7 +20,7 @@ import {
 } from './pages';
 
 function App() {
-  let shouldRenderSideNav = true;
+  const [shouldRenderSideNav, setShouldRenderSideNav] = useState(true);
   const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
@@ -29,13 +30,11 @@ function App() {
       } else setIsMobile(false);
     };
 
-    const getPath = () => {
-      const location = window.location.pathname;
-      if (location === ('/404' || '/doctor/login')) shouldRenderSideNav = false;
-    };
-    getPath();
-    const token = localStorage.getItem('token');
-    if (token === false) window.location.replace('/doctor/login');
+    if (window.location.pathname === '/404' || window.location.pathname === '/admin/login') {
+      setShouldRenderSideNav(false);
+    } else {
+      setShouldRenderSideNav(true);
+    }
 
     // adjust sidebar when page loads
     adjustSidebar();
@@ -57,17 +56,87 @@ function App() {
         )}
         <div className="w-full">
           <Routes>
-            <Route path="/admin" element={<HOME />} />
             <Route path="/admin/login" element={<LOGIN />} />
-            <Route path="/admin/doctors" element={<DOCTORS />} />
-            <Route path="/admin/doctors/add-doctors" element={<ADD_DOCTORS />} />
-            <Route path="/admin/users" element={<USERS />} />
-            <Route path="/admin/blogs" element={<BLOG />} />
-            <Route path="/admin/blogs/add-blog" element={<ADD_BLOG />} />
-            <Route path="/admin/blogs/edit-blog/:id" element={<EDIT_BLOG />} />
-            <Route path="/admin/payments" element={<PAYMENTS />} />
-            <Route path="/admin/refunds" element={<REFUNDS />} />
-            <Route path="/admin/feedbacks" element={<FEEDBACKS />} />
+            <Route
+              path="/admin"
+              element={(
+                <ProtectedRoute>
+                  <HOME />
+                </ProtectedRoute>
+              )}
+            />
+            <Route
+              path="/admin/doctors"
+              element={(
+                <ProtectedRoute>
+                  <DOCTORS />
+                </ProtectedRoute>
+              )}
+            />
+            <Route
+              path="/admin/doctors/add-doctors"
+              element={(
+                <ProtectedRoute>
+                  <ADD_DOCTORS />
+                </ProtectedRoute>
+              )}
+            />
+            <Route
+              path="/admin/users"
+              element={(
+                <ProtectedRoute>
+                  <USERS />
+                </ProtectedRoute>
+              )}
+            />
+            <Route
+              path="/admin/blogs"
+              element={(
+                <ProtectedRoute>
+                  <BLOG />
+                </ProtectedRoute>
+              )}
+            />
+            <Route
+              path="/admin/blogs/add-blog"
+              element={(
+                <ProtectedRoute>
+                  <ADD_BLOG />
+                </ProtectedRoute>
+              )}
+            />
+            <Route
+              path="/admin/blogs/edit-blog/:id"
+              element={(
+                <ProtectedRoute>
+                  <EDIT_BLOG />
+                </ProtectedRoute>
+              )}
+            />
+            <Route
+              path="/admin/payments"
+              element={(
+                <ProtectedRoute>
+                  <PAYMENTS />
+                </ProtectedRoute>
+              )}
+            />
+            <Route
+              path="/admin/refunds"
+              element={(
+                <ProtectedRoute>
+                  <REFUNDS />
+                </ProtectedRoute>
+              )}
+            />
+            <Route
+              path="/admin/feedbacks"
+              element={(
+                <ProtectedRoute>
+                  <FEEDBACKS />
+                </ProtectedRoute>
+              )}
+            />
             <Route path="*" element={<ERROR_PAGE />} />
           </Routes>
         </div>
