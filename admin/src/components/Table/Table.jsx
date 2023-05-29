@@ -6,30 +6,48 @@ import { backendApi } from '../../config/axios.config';
 
 function Table() {
   const [doctors, setDoctors] = useState();
-
-  useEffect(() => {
-    const getDoctors = async () => {
-      try {
-        const res = await backendApi.get('/doctors/get-all-doctors', null, {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem('token')}`,
-          },
-        });
-
-        setDoctors(res.data.data);
-      } catch (error) {
-        //
-      }
-    };
-
-    getDoctors();
-  }, []);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [nextPage, setNextPage] = useState(true);
+  const [prevPage, setPrevPage] = useState(false);
 
   const deleteHandler = async (id) => {
     const result = await backendApi.delete(`/doctors/delete-doctor/${id}`);
     if (result.data.success) {
       toast.success(result.data.success);
       window.location.reload();
+    }
+  };
+
+  useEffect(() => {
+    const getUsers = async () => {
+      let data = await backendApi.get('/doctors/get-all-doctors', null, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('token')}`,
+        },
+      });
+      data = data.data.data;
+      setDoctors(data.docs);
+
+      setNextPage(data.hasNextPage);
+      setPrevPage(data.hasPrevPage);
+    };
+    getUsers();
+  }, []);
+
+  const handlePagination = async (type) => {
+    try {
+      if (type === 'next' && !nextPage) return;
+      const page = type === 'next' ? currentPage + 1 : currentPage - 1;
+
+      let data = await backendApi.get(`/doctors/get-all-doctors?page=${page}`);
+      data = data?.data?.data;
+      setDoctors(data?.docs);
+
+      setNextPage(data?.hasNextPage);
+      setPrevPage(data?.hasPrevPage);
+      setCurrentPage(data?.page);
+    } catch (error) {
+      toast.error('someting went wrong');
     }
   };
 
@@ -93,10 +111,7 @@ function Table() {
                   {doctors &&
                     doctors.map((doctor) => (
                       <tr key={doctor.firstName}>
-                        <td
-                          className="py-4 px-4 whitespace-nowrap"
-                          // {{ console.log(doctor.name)}}
-                        >
+                        <td className="py-4 px-4 whitespace-nowrap">
                           <div className="flex items-center">
                             <div className="flex-shrink-0 h-10 w-10">
                               <img className="h-10 w-10 rounded-full object-cover" src={doctor.photoURL} alt="" />
@@ -152,6 +167,25 @@ function Table() {
             </div>
           </div>
         </div>
+      </div>
+
+      <div className="flex items-center justify-between mt-6">
+        <button
+          type="button"
+          className="flex items-center px-5 py-2 text-sm text-gray-700 capitalize transition-colors duration-200 bg-white border rounded-md gap-x-2 hover:bg-gray-100"
+          onClick={() => handlePagination()}
+        >
+          <ArrowLeftIcon className="w-4 h-4" />
+          <span>previous</span>
+        </button>
+        <button
+          type="button"
+          className="flex items-center px-5 py-2 text-sm text-gray-700 capitalize transition-colors duration-200 bg-white border rounded-md gap-x-2 hover:bg-gray-100"
+          onClick={() => handlePagination('next')}
+        >
+          <span>Next</span>
+          <ArrowRightIcon className="w-4 h-4" />
+        </button>
       </div>
     </section>
   );

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { SearchIcon } from 'lucide-react';
+import { ArrowLeftIcon, ArrowRightIcon, SearchIcon } from 'lucide-react';
 import { toast } from 'react-hot-toast';
 import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
@@ -15,17 +15,26 @@ function Doctors() {
   const [department, setDepartment] = useState([]);
   const [departmentFilter, setFilterDepartment] = useState([]);
   const [searchKeyword, setSearchKeyword] = useState('');
+  const [currentPage, setCurrentPage] = useState(1);
+  const [nextPage, setNextPage] = useState(true);
+  const [prevPage, setPrevPage] = useState(true);
+
   const user = useSelector((state) => state.data.value);
 
   useEffect(() => {
     const getDoctors = async () => {
-      const res = await commonApi.get('/get-doctors');
-      setDoctors(res.data.data);
-      setFilteredDoctors(res.data.data);
+      let users = await commonApi.get('/get-doctors');
+      users = users.data.data;
+      setDoctors(users?.docs);
+      setFilteredDoctors(users?.docs);
+
+      setNextPage(users.hasNextPage);
+      setPrevPage(users.hasPrevPage);
     };
+
     const getDepartment = async () => {
       const res = await commonApi.get('/get-department');
-      setDepartment(res.data.data);
+      setDepartment(res?.data?.data);
     };
     getDoctors();
     getDepartment();
@@ -45,13 +54,31 @@ function Doctors() {
       reason,
     };
     const result = await userApi.post('/report-doctor', data);
-    if (result.data.success) return toast.success('Reported Doctor');
+    if (result?.data?.success) return toast.success('Reported Doctor');
     return setModal(!modal);
   };
 
   const searchHandler = async () => {
     const result = await commonApi.get(`/search-doctors?keyword=${searchKeyword}`);
-    setFilteredDoctors(result.data.result);
+    setFilteredDoctors(result?.data?.result);
+  };
+
+  const handlePagination = async (type) => {
+    try {
+      if (type === 'next' && !nextPage) return;
+      const page = type === 'next' ? currentPage + 1 : currentPage - 1;
+
+      let data = await commonApi.get(`/get-doctors?page=${page}`);
+      data = data.data.data;
+      setDoctors(data?.docs);
+      setFilteredDoctors(data?.docs);
+
+      setNextPage(data.hasNextPage);
+      setPrevPage(data.hasPrevPage);
+      setCurrentPage(data.page);
+    } catch (error) {
+      toast.error('someting went wrong');
+    }
   };
 
   return (
@@ -68,9 +95,9 @@ function Doctors() {
               onChange={(e) => setFilterDepartment(e.target.value)}
             >
               <option value="all">All</option>
-              {department.map((data) => (
-                <option key={data.name} value={data.name}>
-                  {data.name}
+              {department?.map((data) => (
+                <option key={data?.name} value={data.name}>
+                  {data?.name}
                 </option>
               ))}
             </select>
@@ -91,23 +118,23 @@ function Doctors() {
       </div>
 
       <div className="mx-auto grid w-full max-w-7xl items-center space-y-4 px-2 py-10 md:grid-cols-2 md:gap-6 md:space-y-0 lg:grid-cols-4">
-        {filteredDoctors.map((data) => (
-          <div key={data._id} className="rounded-md border">
+        {filteredDoctors?.map((data) => (
+          <div key={data?._id} className="rounded-md border">
             <img
-              src={data.photoURL}
-              alt={data.firstName}
+              src={data?.photoURL}
+              alt={data?.firstName}
               className="aspect-[16/9] w-full  rounded-md md:aspect-auto md:h-[300px] lg:h-[200px]"
             />
             <div className="p-4">
               <h1 className="inline-flex items-center text-lg font-semibold">
-                {`${data.firstName} ${data.lastName}`}
+                {`${data?.firstName} ${data?.lastName}`}
               </h1>
               <p className="mt-3 text-sm text-gray-600">
                 Lorem ipsum dolor sit amet consectetur adipisicing elit. Excepturi, debitis?
               </p>
-              <p className="mt-3 text-sm text-gray-600">Department :{data.department}</p>
-              <p className="mt-3 text-sm text-gray-600">Department :{data.worktime}</p>
-              <p className="mt-3 mb-5 text-sm text-gray-600">Fees :{data.fees}</p>
+              <p className="mt-3 text-sm text-gray-600">Department :{data?.department}</p>
+              <p className="mt-3 text-sm text-gray-600">Department :{data?.worktime}</p>
+              <p className="mt-3 mb-5 text-sm text-gray-600">Fees :{data?.fees}</p>
               <div className="flex justify-between">
                 <Link
                   to="/book-appointment"
@@ -118,7 +145,7 @@ function Doctors() {
                 <button
                   type="button"
                   onClick={() => {
-                    setDoctorId(data._id);
+                    setDoctorId(data?._id);
                     setModal(true);
                   }}
                 >
@@ -141,6 +168,24 @@ function Doctors() {
             </div>
           </div>
         ))}
+      </div>
+      <div className="px-24 py-8 flex items-center justify-between mt-6">
+        <button
+          type="button"
+          className="flex items-center px-5 py-2 text-sm text-gray-700 capitalize transition-colors duration-200 bg-white border rounded-md gap-x-2 hover:bg-gray-100"
+          onClick={() => handlePagination()}
+        >
+          <ArrowLeftIcon className="w-4 h-4" />
+          <span>previous</span>
+        </button>
+        <button
+          type="button"
+          className="flex items-center px-5 py-2 text-sm text-gray-700 capitalize transition-colors duration-200 bg-white border rounded-md gap-x-2 hover:bg-gray-100"
+          onClick={() => handlePagination('next')}
+        >
+          <span>Next</span>
+          <ArrowRightIcon className="w-4 h-4" />
+        </button>
       </div>
 
       {modal && (

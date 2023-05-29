@@ -6,13 +6,21 @@ import { backend, commonApi } from '../configs/axios.config';
 
 function Blog() {
   const [blog, setBlog] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [nextPage, setNextPage] = useState(true);
+  const [prevPage, setPrevPage] = useState(true);
 
   useEffect(() => {
-    const getUsers = async () => {
-      const blogData = await commonApi.get('/blogs/get-all-blogs');
-      setBlog(blogData.data.data);
+    const getBlogs = async () => {
+      let data = await commonApi.get('/blogs/get-all-blogs');
+      data = data.data.data;
+      console.log(data);
+      setBlog(data.docs);
+
+      setNextPage(data.hasNextPage);
+      setPrevPage(data.hasPrevPage);
     };
-    getUsers();
+    getBlogs();
   }, []);
 
   const deleteHandler = async (id) => {
@@ -21,6 +29,24 @@ function Blog() {
     if (res.data.success) {
       toast.success(res.data.message);
       window.location.reload();
+    }
+  };
+
+  const handlePagination = async (type) => {
+    try {
+      if (!(type === 'next') && nextPage) return;
+      if (!(type !== 'next') && prevPage) return;
+      const page = type === 'next' ? currentPage + 1 : currentPage - 1;
+
+      let data = await commonApi.get(`/blogs/get-all-blogs/?page=${page}`);
+      data = data.data.data;
+      setBlog(data.docs);
+
+      setNextPage(data.hasNextPage);
+      setPrevPage(data.hasPrevPage);
+      setCurrentPage(data.page);
+    } catch (error) {
+      toast.error('someting went wrong');
     }
   };
 
@@ -132,44 +158,22 @@ function Blog() {
         </div>
       </div>
       <div className="flex items-center justify-between mt-6">
-        <p
-          href="#"
+        <button
+          type="button"
           className="flex items-center px-5 py-2 text-sm text-gray-700 capitalize transition-colors duration-200 bg-white border rounded-md gap-x-2 hover:bg-gray-100"
+          onClick={() => handlePagination()}
         >
           <ArrowLeftIcon className="w-4 h-4" />
           <span>previous</span>
-        </p>
-
-        <div className="items-center hidden md:flex gap-x-3">
-          <p href="#" className="px-2 py-1 text-sm text-blue-500 rounded-md bg-blue-100/60">
-            1
-          </p>
-          <p href="#" className="px-2 py-1 text-sm text-gray-500 rounded-md hover:bg-gray-100">
-            2
-          </p>
-          <p href="#" className="px-2 py-1 text-sm text-gray-500 rounded-md hover:bg-gray-100">
-            3
-          </p>
-          <p href="#" className="px-2 py-1 text-sm text-gray-500 rounded-md hover:bg-gray-100">
-            ...
-          </p>
-          <p href="#" className="px-2 py-1 text-sm text-gray-500 rounded-md hover:bg-gray-100">
-            12
-          </p>
-          <p href="#" className="px-2 py-1 text-sm text-gray-500 rounded-md hover:bg-gray-100">
-            13
-          </p>
-          <p href="#" className="px-2 py-1 text-sm text-gray-500 rounded-md hover:bg-gray-100">
-            14
-          </p>
-        </div>
-        <p
-          href="#"
+        </button>
+        <button
+          type="button"
           className="flex items-center px-5 py-2 text-sm text-gray-700 capitalize transition-colors duration-200 bg-white border rounded-md gap-x-2 hover:bg-gray-100"
+          onClick={() => handlePagination('next')}
         >
           <span>Next</span>
           <ArrowRightIcon className="w-4 h-4" />
-        </p>
+        </button>
       </div>
     </section>
   );

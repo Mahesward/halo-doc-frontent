@@ -47,7 +47,7 @@ function Profile() {
               className="self-center flex-shrink-0 w-24 h-24 border rounded-full md:justify-self-start"
             />
             <div className="flex flex-col">
-              <h4 className="text-lg font-semibold text-center md:text-left">Leroy Jenkins</h4>
+              <h4 className="text-lg font-semibold text-center md:text-left">{`${profileData.firstName} ${profileData.lastName}`}</h4>
               <p className="">{profileData.profile}</p>
             </div>
           </div>

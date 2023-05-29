@@ -6,13 +6,21 @@ import { backendApi, commonApi } from '../config/axios.config';
 
 function Blog() {
   const [blog, setBlog] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [nextPage, setNextPage] = useState(true);
+  const [prevPage, setPrevPage] = useState(true);
 
   useEffect(() => {
-    const getUsers = async () => {
-      const blogData = await commonApi.get('/blogs/get-all-blogs');
-      setBlog(blogData.data.data);
+    const getBlogs = async () => {
+      let data = await commonApi.get('/blogs/get-all-blogs');
+      data = data.data.data;
+      console.log(data);
+      setBlog(data.docs);
+
+      setNextPage(data.hasNextPage);
+      setPrevPage(data.hasPrevPage);
     };
-    getUsers();
+    getBlogs();
   }, []);
 
   const deleteHandler = async (id) => {
@@ -21,6 +29,24 @@ function Blog() {
     if (res.data.success) {
       toast.success(res.data.message);
       window.location.reload();
+    }
+  };
+
+  const handlePagination = async (type) => {
+    try {
+      if (!(type === 'next') && nextPage) return;
+      if (!(type !== 'next') && prevPage) return;
+      const page = type === 'next' ? currentPage + 1 : currentPage - 1;
+
+      let data = await commonApi.get(`/blogs/get-all-blogs/?page=${page}`);
+      data = data.data.data;
+      setBlog(data.docs);
+
+      setNextPage(data.hasNextPage);
+      setPrevPage(data.hasPrevPage);
+      setCurrentPage(data.page);
+    } catch (error) {
+      toast.error('someting went wrong');
     }
   };
 
@@ -58,27 +84,31 @@ function Blog() {
                 </thead>
                 <tbody className="bg-white divide-y divide-gray-200">
                   {blog &&
-                    blog.map((blogMap) => (
-                      <tr key={blogMap.title}>
+                    blog?.map((blogMap) => (
+                      <tr key={blogMap?.title}>
                         <td className="py-4 px-4 whitespace-nowrap">
                           <div className="flex items-center">
                             <div className="flex-shrink-0 h-10 w-10">
-                              <img className="h-10 w-10 rounded-full object-cover" src={blogMap.imageURL} alt="" />
+                              <img
+                                className="h-10 w-10 rounded-full object-cover"
+                                src={blogMap?.imageURL}
+                                alt=""
+                              />
                             </div>
                             <div className="ml-4">
-                              <div className="text-sm font-medium text-gray-900">{blogMap.title}</div>
+                              <div className="text-sm font-medium text-gray-900">{blogMap?.title}</div>
                             </div>
                           </div>
                         </td>
                         <td className="py-4 px-4 whitespace-nowrap">
                           <div className="ml-4">
-                            <div className="text-sm text-gray-500">{blogMap.content.slice(0, 75)}....</div>
+                            <div className="text-sm text-gray-500">{blogMap?.content.slice(0, 75)}....</div>
                           </div>
                         </td>
                         <td className="px-4 py-4 whitespace-nowrap text-right text-sm font-medium">
                           <span className="inline-flex divide-x overflow-hidden rounded-md border bg-white shadow-sm">
                             <Link
-                              to={`/admin/blogs/edit-blog/${blogMap._id}`}
+                              to={`/admin/blogs/edit-blog/${blogMap?._id}`}
                               className="inline-block p-3 text-blue-700 hover:bg-gray-50 focus:relative"
                               title="Edit Product"
                             >
@@ -99,10 +129,11 @@ function Blog() {
                             </Link>
 
                             <button
+                              type="button"
                               className="inline-block p-3 text-red-700 hover:bg-gray-50 focus:relative"
                               title="Delete Product"
-                              onClick={(e) => {
-                                deleteHandler(blogMap._id);
+                              onClick={() => {
+                                deleteHandler(blogMap?._id);
                               }}
                             >
                               <svg
@@ -130,45 +161,24 @@ function Blog() {
           </div>
         </div>
       </div>
+
       <div className="flex items-center justify-between mt-6">
-        <a
-          href="#"
+        <button
+          type="button"
           className="flex items-center px-5 py-2 text-sm text-gray-700 capitalize transition-colors duration-200 bg-white border rounded-md gap-x-2 hover:bg-gray-100"
+          onClick={() => handlePagination()}
         >
           <ArrowLeftIcon className="w-4 h-4" />
           <span>previous</span>
-        </a>
-
-        <div className="items-center hidden md:flex gap-x-3">
-          <a href="#" className="px-2 py-1 text-sm text-blue-500 rounded-md bg-blue-100/60">
-            1
-          </a>
-          <a href="#" className="px-2 py-1 text-sm text-gray-500 rounded-md hover:bg-gray-100">
-            2
-          </a>
-          <a href="#" className="px-2 py-1 text-sm text-gray-500 rounded-md hover:bg-gray-100">
-            3
-          </a>
-          <a href="#" className="px-2 py-1 text-sm text-gray-500 rounded-md hover:bg-gray-100">
-            ...
-          </a>
-          <a href="#" className="px-2 py-1 text-sm text-gray-500 rounded-md hover:bg-gray-100">
-            12
-          </a>
-          <a href="#" className="px-2 py-1 text-sm text-gray-500 rounded-md hover:bg-gray-100">
-            13
-          </a>
-          <a href="#" className="px-2 py-1 text-sm text-gray-500 rounded-md hover:bg-gray-100">
-            14
-          </a>
-        </div>
-        <a
-          href="#"
+        </button>
+        <button
+          type="button"
           className="flex items-center px-5 py-2 text-sm text-gray-700 capitalize transition-colors duration-200 bg-white border rounded-md gap-x-2 hover:bg-gray-100"
+          onClick={() => handlePagination('next')}
         >
           <span>Next</span>
           <ArrowRightIcon className="w-4 h-4" />
-        </a>
+        </button>
       </div>
     </section>
   );

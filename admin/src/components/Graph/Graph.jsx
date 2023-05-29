@@ -1,55 +1,29 @@
 /* eslint-disable import/no-extraneous-dependencies */
 import React from 'react';
-import {
-  Chart as ChartJS,
-  CategoryScale,
-  LinearScale,
-  PointElement,
-  LineElement,
-  Title,
-  Tooltip,
-  Legend,
-} from 'chart.js';
-import { Line } from 'react-chartjs-2';
-import { faker } from '@faker-js/faker';
-
-ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend);
-
-export const options = {
-  responsive: true,
-  plugins: {
-    legend: {
-      position: 'top',
-    },
-    title: {
-      display: true,
-      text: 'Chart.js Line Chart',
-    },
-  },
-};
-
-const labels = ['January', 'February', 'March', 'April', 'May', 'June', 'July'];
-
-export const data = {
-  labels,
-  datasets: [
-    {
-      label: 'Dataset 1',
-      data: labels.map(() => faker.number.int({ min: -1000, max: 1000 })),
-      borderColor: 'rgb(255, 99, 132)',
-      backgroundColor: 'rgba(255, 99, 132, 0.5)',
-    },
-    {
-      label: 'Dataset 2',
-      data: labels.map(() => faker.number.int({ min: -1000, max: 1000 })),
-      borderColor: 'rgb(53, 162, 235)',
-      backgroundColor: 'rgba(53, 162, 235, 0.5)',
-    },
-  ],
-};
+import Chart from 'react-apexcharts';
 
 function Graphs() {
-  return <Line options={options} data={data} />;
+  const options = {
+    chart: {
+      id: 'basic-bar',
+    },
+    xaxis: {
+      categories: [1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998],
+    },
+  };
+
+  const series = [
+    {
+      name: 'series-1',
+      data: [30, 40, 45, 50, 49, 60, 70, 91],
+    },
+  ];
+  return (
+    <>
+      {/* <Line options={options} data={data} /> */}
+      <Chart options={options} series={series} type="bar" width="500" />
+    </>
+  );
 }
 
 export default Graphs;

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { toast } from 'react-hot-toast';
 import { Link } from 'react-router-dom';
 import { useSelector } from 'react-redux';
-import { backend } from '../../configs/axios.config';
+import { backend, commonApi } from '../../configs/axios.config';
 
 function AppointmentList({ home = false }) {
   const [appointment, setAppointment] = useState([]);
@@ -18,8 +18,28 @@ function AppointmentList({ home = false }) {
 
   const handleCancellation = async (id) => {
     const result = await backend.patch(`/appointment/cancel-appointment/${id}`);
-    console.log(result);
     if (result.data.success) toast.success('canceled booking');
+  };
+
+  const handleChat = async (recieverId) => {
+    let chatExists;
+    let chat = await commonApi.get(`/conversation/${recieverId}`);
+    chat = chat.data.conversation;
+
+    chat.forEach((element) => {
+      if (element.members.includes(recieverId) && element.members.includes(user._id)) {
+        chatExists = true;
+      }
+    });
+    if (!chatExists) {
+      const data = {
+        recieverId,
+        senderId: user._id,
+      };
+
+      await commonApi.post('/conversation', data);
+    }
+    window.location.replace('/doctor/chat');
   };
 
   return (
@@ -82,10 +102,21 @@ function AppointmentList({ home = false }) {
                         scope="col"
                         className="px-4 py-3.5 text-sm font-normal text-left rtl:text-right text-gray-500"
                       >
-                        View
+                        Chat
                       </th>
-                      <th scope="col" className="relative py-3.5 px-4">
-                        <span className="sr-only">Edit</span>
+
+                      <th
+                        scope="col"
+                        className="px-4 py-3.5 text-sm font-normal text-left rtl:text-right text-gray-500"
+                      >
+                        Join meet
+                      </th>
+
+                      <th
+                        scope="col"
+                        className="px-4 py-3.5 text-sm font-normal text-left rtl:text-right text-gray-500"
+                      >
+                        Cancel
                       </th>
                     </tr>
                   </thead>
@@ -116,6 +147,15 @@ function AppointmentList({ home = false }) {
                             </span>
                           </td>
                           <td className="px-4 py-4 whitespace-nowrap text-right text-sm font-medium">
+                            <button
+                              type="button"
+                              className="text-gray- border p-1 rounded-md hover:text-indigo-600"
+                              onClick={() => handleChat(data.userId)}
+                            >
+                              Chat
+                            </button>
+                          </td>
+                          <td className="px-4 py-4 whitespace-nowrap text-right text-sm font-medium">
                             <Link
                               to="/doctor/video-call"
                               className="text-gray- border p-1 rounded-md hover:text-indigo-600"
@@ -126,7 +166,7 @@ function AppointmentList({ home = false }) {
                           <td className="px-4 py-4 whitespace-nowrap text-right text-sm font-medium">
                             <button
                               type="button"
-                              onClick={(e) => {
+                              onClick={() => {
                                 handleCancellation(data._id);
                               }}
                               className="text-gray- border p-1 rounded-md hover:text-indigo-600"
