@@ -16,7 +16,7 @@ import {
   PROFILE,
   VIDEO_CALL,
 } from './pages';
-import './app.css';
+import './App.css';
 import ProtectedRoute from '../auth/ProtectedRoute';
 
 function App() {
@@ -65,83 +65,83 @@ function App() {
                 <Route path="/doctor/login" element={<LOGIN />} />
                 <Route
                   path="/doctor"
-                  element={
+                  element={(
                     <ProtectedRoute>
                       <HOME />
                     </ProtectedRoute>
-                  }
+                  )}
                 />
                 <Route
                   path="/doctor/appointments"
-                  element={
+                  element={(
                     <ProtectedRoute>
                       <APPOINTMENTS />
                     </ProtectedRoute>
-                  }
+                  )}
                 />
                 <Route
                   path="/doctor/inactive-appointments"
-                  element={
+                  element={(
                     <ProtectedRoute>
                       <INACTIVE_APPOINTMENTS />
                     </ProtectedRoute>
-                  }
+                  )}
                 />
                 <Route
                   path="/doctor/blogs"
-                  element={
+                  element={(
                     <ProtectedRoute>
                       <BLOGS />
                     </ProtectedRoute>
-                  }
+                  )}
                 />
                 <Route
                   path="/doctor/blogs/add-blog"
-                  element={
+                  element={(
                     <ProtectedRoute>
                       <ADD_BLOG />
                     </ProtectedRoute>
-                  }
+                  )}
                 />
                 <Route
                   path="/doctor/profile"
-                  element={
+                  element={(
                     <ProtectedRoute>
                       <PROFILE />
                     </ProtectedRoute>
-                  }
+                  )}
                 />
                 <Route
                   path="/doctor/edit-profile"
-                  element={
+                  element={(
                     <ProtectedRoute>
                       <EDIT_PROFILE />
                     </ProtectedRoute>
-                  }
+                  )}
                 />
                 <Route
                   path="/doctor/chat"
-                  element={
+                  element={(
                     <ProtectedRoute>
                       <CHAT />
                     </ProtectedRoute>
-                  }
+                  )}
                 />
                 <Route
                   path="/doctor/video-call"
-                  element={
+                  element={(
                     <ProtectedRoute>
                       <VIDEO_CALL />
                     </ProtectedRoute>
-                  }
+                  )}
                 />
                 <Route
                   path="/doctor/add-prescription"
-                  element={
+                  element={(
                     <ProtectedRoute>
                       <ADD_PRESCRIPTION />
                     </ProtectedRoute>
-                  }
+                  )}
                 />
               </Routes>
             </div>
