@@ -15,7 +15,7 @@ import {
   CHAT,
   VIDEO_CALL,
 } from './pages';
-import './app.css';
+import './App.css';
 
 function App() {
   const { loading } = useSelector((state) => state.alerts);
