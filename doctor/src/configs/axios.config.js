@@ -1,8 +1,8 @@
 import axios from 'axios';
 
-const DOCTOR_BASE_URL = 'http://localhost:8080/api/doctor';
-const COMMON_URL = 'http://localhost:8080/api';
-const CLOUDINARY_UPLOAD_URL = 'https://api.cloudinary.com/v1_1/halo-doc/image';
+const DOCTOR_BASE_URL = import.meta.env.VITE_DOCTOR_API_URL;
+const COMMON_URL = import.meta.env.VITE_API_URL;
+const CLOUDINARY_UPLOAD_URL = import.meta.env.VITE_CLOUDINARY_API;
 
 export const backend = axios.create({ baseURL: DOCTOR_BASE_URL });
 export const commonApi = axios.create({ baseURL: COMMON_URL });
