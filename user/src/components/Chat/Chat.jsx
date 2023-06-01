@@ -4,7 +4,7 @@ import { useSelector } from 'react-redux';
 import { commonApi } from '../../configs/axios.config';
 import CHAT_CARD from '../Chat Card/Chat_Card';
 
-const socket = io.connect('http://localhost:8080');
+const socket = io.connect(import.meta.env.VITE_BACKEND_URL);
 
 function Chat() {
   const [conversations, setConversations] = useState([]);

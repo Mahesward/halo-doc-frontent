@@ -1,11 +1,16 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
+import { userApi } from '../configs/axios.config';
 import Navbar from '../components/Navbar/Navbar';
+import { useEffect } from 'react';
 
 function profile() {
   const profileData = useSelector((state) => state.data.value);
 
+  useEffect(() => {
+    userApi.post('/get-user-data');
+  });
   return (
     <>
       <Navbar />

@@ -35,7 +35,6 @@ function App() {
     } else {
       setShouldRenderSideNav(true);
     }
-    console.log(window.location.pathname);
 
     // adjust sidebar when page loads
     adjustSidebar();
@@ -136,7 +135,7 @@ function App() {
                   )}
                 />
                 <Route
-                  path="/doctor/add-prescription"
+                  path="/doctor/add-prescription/:id"
                   element={(
                     <ProtectedRoute>
                       <ADD_PRESCRIPTION />

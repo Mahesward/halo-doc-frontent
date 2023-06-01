@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 
-
 function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const user = useSelector((state) => state.data.value);
@@ -46,10 +45,10 @@ function Navbar() {
         </div>
 
         <ul className="hidden lg:flex lg:items-center grow mx-10 space-x-6">
-          {menuItems.map((m) => (
+          {menuItems?.map((m) => (
             <li>
-              <Link className="text-base text-gray-700 hover:text-gray-800" to={m.href}>
-                {m.name}
+              <Link className="text-base text-gray-700 hover:text-gray-800" to={m?.href}>
+                {m?.name}
               </Link>
             </li>
           ))}
@@ -74,7 +73,7 @@ function Navbar() {
                         />
                       </svg>
                     </span>
-                    <span className="font-bold">DevUI</span>
+                    <span className="font-bold">HALO-DOC</span>
                   </div>
                   <div className="-mr-2">
                     <button
@@ -91,13 +90,13 @@ function Navbar() {
                 </div>
                 <div className="mt-6">
                   <nav className="grid gap-y-4">
-                    {menuItems.map((item) => (
+                    {menuItems?.map((item) => (
                       <a
-                        key={item.name}
-                        href={item.href}
+                        key={item?.name}
+                        href={item?.href}
                         className="-m-3 flex items-center rounded-md p-3 text-sm font-semibold hover:bg-gray-50"
                       >
-                        <span className="ml-3 text-base font-medium text-gray-900">{item.name}</span>
+                        <span className="ml-3 text-base font-medium text-gray-900">{item?.name}</span>
                       </a>
                     ))}
                   </nav>
@@ -116,11 +115,11 @@ function Navbar() {
           <div className="flex items-center space-x-2">
             <img
               className="inline-block w-10 h-10 rounded-full"
-              src={user.profileURL ? user.profileURL : '/images/default-profilepng.png'}
+              src={user?.profileURL ? user?.profileURL : '/images/default-profilepng.png'}
               alt="John Doe"
             />
             <span className="flex flex-col">
-              <span className="text-sm font-medium text-gray-900">{user.name}</span>
+              <span className="text-sm font-medium text-gray-900">{user?.name}</span>
               <Link to="/profile" className="text-sm font-medium text-gray-500 cursor-pointer">
                 View Profile
               </Link>
