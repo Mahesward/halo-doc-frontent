@@ -1,10 +1,13 @@
 import React, { useState } from 'react';
+import { useSelector } from 'react-redux';
+import { toast } from 'react-hot-toast';
 import { useParams } from 'react-router-dom';
 import { backend } from '../configs/axios.config';
-import { toast } from 'react-hot-toast';
 
 function addPrescription() {
   const id = useParams();
+  const token = localStorage.getItem('token');
+  const user = useSelector((state) => state.data.value)[0];
   const [medicine, setMedicine] = useState();
   const [dosage, setDosage] = useState();
   const [notes, setNotes] = useState();
@@ -15,8 +18,14 @@ function addPrescription() {
       medicine,
       dosage,
       notes,
+      doctor: user.firstName,
+      date: new Date(),
     };
-    const response = await backend.post('/add-prescription', data);
+    const response = await backend.post('/add-prescription', data, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
     if (response.data.success) {
       toast.success('Prescription added successfully');
       window.location.replace('/doctor/appointments');

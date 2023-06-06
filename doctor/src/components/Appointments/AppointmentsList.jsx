@@ -5,19 +5,28 @@ import { useSelector } from 'react-redux';
 import { backend, commonApi } from '../../configs/axios.config';
 
 function AppointmentList({ home = false }) {
+  const token = localStorage.getItem('token');
   const [appointment, setAppointment] = useState([]);
   const user = useSelector((state) => state.data.value)[0];
 
   useEffect(() => {
     const getAppointments = async () => {
-      const res = await backend.get(`/appointment/get-appointments/${user?._id}`);
+      const res = await backend.get(`/appointment/get-appointments/${user?._id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
       if (res.data.success) setAppointment(res.data.data);
     };
     getAppointments();
   }, []);
 
   const handleCancellation = async (id) => {
-    const result = await backend.patch(`/appointment/cancel-appointment/${id}`);
+    const result = await backend.patch(`/appointment/cancel-appointment/${id}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
     if (result.data.success) toast.success('canceled booking');
   };
 

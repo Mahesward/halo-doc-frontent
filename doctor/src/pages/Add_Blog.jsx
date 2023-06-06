@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { backend, cloudinaryUpload } from '../configs/axios.config';
 
 function addBlog() {
+  const token = localStorage.getItem('token');
   const [title, setTitle] = useState('');
   const [image, setImage] = useState('');
   const [content, setContent] = useState('');
@@ -39,7 +40,11 @@ function addBlog() {
       };
 
       if (data.imageURL) {
-        const res = await backend.post('/blogs/add-blog', data);
+        const res = await backend.post('/blogs/add-blog', data, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
 
         if (res.data.success) {
           toast.success(res.data.message);

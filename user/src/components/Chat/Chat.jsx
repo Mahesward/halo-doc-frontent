@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import io from 'socket.io-client';
+import { toast } from 'react-hot-toast';
 import { useSelector } from 'react-redux';
 import { commonApi } from '../../configs/axios.config';
 import CHAT_CARD from '../Chat Card/Chat_Card';
@@ -19,9 +20,8 @@ function Chat() {
   }, [user]);
 
   useEffect(() => {
-    socket.on('allUsers', (users) => {
-      console.log(users);
-    });
+    socket.on('allUsers');
+
     socket.on('getMessage', (data) => {
       setArrivalMessage({
         sender: data.senderId,
@@ -42,7 +42,7 @@ function Chat() {
         const res = await commonApi.get(`/conversation/${user?._id}`);
         setConversations(res.data.conversation);
       } catch (error) {
-        console.log(error);
+        toast.error('something went wrong');
       }
     };
     getConversation();
@@ -83,7 +83,7 @@ function Chat() {
         setMessage([...message, res.data.messages]);
         setMessageInput('');
       } catch (error) {
-        console.log(error);
+        toast.error('something went wrong');
       }
     }
   };
@@ -112,7 +112,7 @@ function Chat() {
                   {conversations.map((data) => (
                     <button
                       type="button"
-                      key={data.members[0]}
+                      key={data}
                       className="flex flex-row items-center hover:bg-gray-100 rounded-xl p-2"
                       onClick={() => setCurrentChat(data)}
                     >

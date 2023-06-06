@@ -6,8 +6,6 @@ import CHAT_CARD from '../Chat card/Chat_Card';
 
 const socket = io.connect(import.meta.env.VITE_BACKEND_URL);
 
-console.log(import.meta.env.VITE_BACKEND_URL);
-
 function chat() {
   const [conversations, setConversations] = useState([]);
   const [currentChat, setCurrentChat] = useState(null);
@@ -23,7 +21,6 @@ function chat() {
 
   useEffect(() => {
     socket.on('allUsers', (users) => {
-      console.log(users.length);
       setOnlineUsers(users.userId);
     });
     socket.on('getMessage', (data) => {
@@ -112,10 +109,10 @@ function chat() {
                 <span className="flex items-center justify-center bg-gray-300 h-4 w-4 rounded-full">{''}</span>
               </div>
               <div className="flex flex-col space-y-1 mt-4 -mx-2 h-48 overflow-y-auto">
-                {conversations.map((data, index) => (
+                {conversations.map((data) => (
                   <button
                     type="button"
-                    key={index}
+                    key={data}
                     className="flex flex-row items-center hover:bg-gray-100 rounded-xl p-2"
                     onClick={() => setCurrentChat(data)}
                   >
@@ -131,10 +128,10 @@ function chat() {
                 <span className="flex items-center justify-center bg-gray-300 h-4 w-4 rounded-full">{''}</span>
               </div>
               <div className="flex flex-col space-y-1 mt-4 -mx-2 h-48 overflow-y-auto">
-                {conversations.map((data, index) => (
+                {conversations.map((data) => (
                   <button
                     type="button"
-                    key={index}
+                    key={data}
                     className="flex flex-row items-center hover:bg-gray-100 rounded-xl p-2"
                     onClick={() => setCurrentChat(data)}
                   >
