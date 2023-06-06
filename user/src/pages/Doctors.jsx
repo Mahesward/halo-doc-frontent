@@ -7,6 +7,7 @@ import { NAVBAR } from '../components';
 import { commonApi, userApi } from '../configs/axios.config';
 
 function Doctors() {
+  const token = localStorage.getItem('token');
   const [doctors, setDoctors] = useState([]);
   const [doctorId, setDoctorId] = useState('');
   const [filteredDoctors, setFilteredDoctors] = useState([]);
@@ -53,7 +54,11 @@ function Doctors() {
       userId: user._id,
       reason,
     };
-    const result = await userApi.post('/report-doctor', data);
+    const result = await userApi.post('/report-doctor', data, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
     if (result?.data?.success) return toast.success('Reported Doctor');
     return setModal(!modal);
   };

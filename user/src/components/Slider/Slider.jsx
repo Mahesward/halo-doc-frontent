@@ -1,5 +1,5 @@
-import React from 'react';
-import { DollarSign, Filter, Menu, Moon, Star, X, Zap } from 'lucide-react';
+import React, { useState } from 'react';
+import { Menu, X } from 'lucide-react';
 
 const menuItems = [
   {
@@ -25,10 +25,15 @@ const menuItems = [
 ];
 
 function Slider() {
-  const [isMenuOpen, setIsMenuOpen] = React.useState(false);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
+  };
+
+  const handleLogout = () => {
+    localStorage.clear();
+    window.location.replace('/login');
   };
 
   return (
@@ -52,9 +57,10 @@ function Slider() {
           <div className="hidden lg:block">
             <button
               type="button"
-              className="rounded-md bg-black px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-black/80 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-black"
+              className=" px-4 py-2 transition ease-in duration-200 uppercase text-sm rounded-lg hover:bg-gray-800 hover:text-white border-2 border-gray-900 focus:outline-none"
+              onClick={() => handleLogout()}
             >
-              Button text
+              Logout
             </button>
           </div>
           <div className="lg:hidden">
@@ -80,7 +86,7 @@ function Slider() {
                           />
                         </svg>
                       </span>
-                      <span className="font-bold">DevUI</span>
+                      <span className="font-bold">Halo-Doc</span>
                     </div>
                     <div className="-mr-2">
                       <button
@@ -108,9 +114,10 @@ function Slider() {
                   </div>
                   <button
                     type="button"
-                    className="mt-4 w-full rounded-md bg-black px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-black/80 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-black"
+                    className="mt-4 px-4 py-2 transition ease-in duration-200 uppercase text-sm rounded-lg hover:bg-gray-800 hover:text-white border-2 border-gray-900 focus:outline-none"
+                    onClick={() => handleLogout()}
                   >
-                    Button text
+                    Logout
                   </button>
                 </div>
               </div>
@@ -125,15 +132,6 @@ function Slider() {
             <h1 className="mt-8 max-w-4xl text-2xl font-bold tracking-tight text-black md:text-4xl lg:text-6xl">
               We Cares About Your Health
             </h1>
-            <p className="mt-8 max-w-3xl text-lg text-gray-700"></p>
-            <div className="mt-8">
-              <button
-                type="button"
-                className="rounded-md bg-black px-3 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-black/80 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-black"
-              >
-                Subscribe
-              </button>
-            </div>
           </div>
           <div className="rounded-lg bg-gray-200 p-4">
             <img

@@ -1,7 +1,7 @@
 import React from 'react';
 import { Navigate, useLocation } from 'react-router-dom';
 
-const protectedRoute = ({ children }) => {
+function ProtectedRoute({ children }) {
   let islogged = true;
   const location = useLocation();
   if (!localStorage.getItem('token')) {
@@ -9,10 +9,10 @@ const protectedRoute = ({ children }) => {
   }
 
   if (!islogged) {
-    return <Navigate to="/doctor/login" state={{ from: location }} replace />;
+    return <Navigate to="/login" state={{ from: location }} replace />;
   }
 
   return children;
-};
+}
 
-export default protectedRoute;
+export default ProtectedRoute;

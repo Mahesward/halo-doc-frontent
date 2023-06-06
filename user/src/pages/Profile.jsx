@@ -1,23 +1,32 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { userApi } from '../configs/axios.config';
 import Navbar from '../components/Navbar/Navbar';
-import { useEffect } from 'react';
 
 function profile() {
-  const profileData = useSelector((state) => state.data.value);
+  const profileData = useSelector((state) => state?.data?.value);
+  const [prescription, setPrescription] = useState();
 
   useEffect(() => {
-    userApi.post('/get-user-data');
-  });
+    const getUserData = async () => {
+      const token = localStorage?.getItem('token');
+      const user = await userApi?.get(`/get-user-info/${profileData?._id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      setPrescription(user?.data?.data?.prescription);
+    };
+    getUserData();
+  }, []);
   return (
     <>
       <Navbar />
       <div className="flex flex-col border rounded-lg overflow-hidden bg-white">
         <div className="grid grid-cols-1 sm:grid-cols-4">
           <div className="flex flex-col border-b sm:border-b-0 items-center p-8 sm:px-4 sm:h-full sm:justify-center">
-            <p className="text-7xl font-bold text-[#0ed3cf] rounded-full">{profileData.name.split('')[0]}</p>
+            <p className="text-7xl font-bold text-[#0ed3cf] rounded-full">{profileData?.name.split('')[0]}</p>
           </div>
           <div className="flex flex-col sm:border-l col-span-3">
             <div className="flex flex-col space-y-4  p-6 text-gray-600">
@@ -41,7 +50,7 @@ function profile() {
                 </span>
                 <p className="flex items-center  text-gray-500">
                   <span className="font-semibold mr-2 text-xs uppercase">Name:</span>
-                  <span>{profileData.name}</span>
+                  <span>{profileData?.name}</span>
                 </p>
               </div>
 
@@ -64,9 +73,12 @@ function profile() {
                 </p>
               </div>
             </div>
-            <div className="flex flex-col w-full relative bottom-0">
+            <div className="flex justify-center w-full relative bottom-0  bg-gray-50">
               <div className="grid grid-cols-3 border-t divide-x text-[#0ed3cf]  bg-gray-50 dark:bg-transparent py-3">
-                <Link className=" cursor-pointer uppercase text-xs flex flex-row items-center justify-center font-semibold">
+                <Link
+                  to="/edit-profile"
+                  className=" cursor-pointer uppercase text-xs flex flex-row items-center justify-center font-semibold"
+                >
                   <div className="mr-2">
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
@@ -86,73 +98,35 @@ function profile() {
           </div>
         </div>
       </div>
-      <h3 className="text-medium">Prescription</h3>
-      <div className="flex flex-col border rounded-lg overflow-hidden bg-white my-12 max-w-lg">
-        <div className="grid grid-cols-1">
-          <div className="flex flex-col">
-            <div className="flex flex-col space-y-4  p-6 text-gray-600">
-              <div className="flex flex-row text-sm">
-                <p className="flex items-center text-gray-500">
-                  Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been
-                  the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of
-                  type and scrambled it to make a type specimen book. It has survived not only five centuries, but
-                  also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in
-                  the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently
-                  with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.
-                </p>
-              </div>
-            </div>
-            <div className="flex flex-col w-full relative bottom-0">
-              <div className="grid grid-cols-3 border-t divide-x text-gray-500  bg-gray-50 dark:bg-transparent py-3">
-                <a className=" cursor-pointer uppercase text-xs flex flex-row items-center justify-center font-semibold">
-                  <div className="mr-2">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      height="20px"
-                      viewBox="0 0 24 24"
-                      width="20px"
-                      fill="#64748b"
-                    >
-                      <path d="M0 0h24v24H0z" fill="none" />
-                      <path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z" />
-                    </svg>
+      <h3 className="text-lg font-medium m-5">Prescription</h3>
+      <div className="grid grid-cols-4">
+        {prescription?.map((data) => (
+          <div className="flex flex-col border rounded-lg overflow-hidden bg-white mx-5 my-12 max-w-lg">
+            <div className="grid grid-cols-1">
+              <div className="flex flex-col">
+                <div className="flex flex-col space-y-4  p-6 text-gray-600">
+                  <div className="flex flex-col gap-2 text-sm">
+                    <p className="flex items-center font-medium text-lg text-gray-500">
+                      Date :<span className="text-base font-normal">{data?.date}</span>
+                    </p>
+                    <p className="flex items-center font-medium text-lg text-gray-500">
+                      Doctor Name :<span className="text-base font-normal">{data?.doctor}</span>
+                    </p>
+                    <p className="flex items-center font-medium text-lg text-gray-500">
+                      Medicine :<span className="text-base font-normal">{data?.medicine}</span>
+                    </p>
+                    <p className="flex items-center font-medium text-lg text-gray-500">
+                      Dosage :<span className="text-base font-normal">{data?.dosage}</span>
+                    </p>
+                    <p className="flex items-center font-medium text-lg text-gray-500">
+                      Notes :<span className="text-base font-normal">{data?.notes}</span>
+                    </p>
                   </div>
-                  Update
-                </a>
-                <a className="cursor-pointer uppercase text-xs flex flex-row items-center justify-center font-semibold">
-                  <div className="mr-2">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      height="20px"
-                      viewBox="0 0 24 24"
-                      width="20px"
-                      fill="#64748b"
-                    >
-                      <path d="M0 0h24v24H0V0z" fill="none" />
-                      <path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM8 9h8v10H8V9zm7.5-5l-1-1h-5l-1 1H5v2h14V4z" />
-                    </svg>
-                  </div>
-                  Remove
-                </a>
-                <a className="cursor-pointer uppercase text-xs flex flex-row items-center justify-center font-semibold">
-                  <div className="mr-2">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      height="20px"
-                      viewBox="0 0 24 24"
-                      width="20px"
-                      fill="#64748b"
-                    >
-                      <path d="M0 0h24v24H0z" fill="none" />
-                      <path d="M19 19H5V5h7V3H5c-1.11 0-2 .9np-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2v-7h-2v7zM14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7z" />
-                    </svg>
-                  </div>
-                  View
-                </a>
+                </div>
               </div>
             </div>
           </div>
-        </div>
+        ))}
       </div>
     </>
   );

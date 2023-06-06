@@ -2,6 +2,7 @@ import React, { Suspense } from 'react';
 import { Toaster } from 'react-hot-toast';
 import { useSelector } from 'react-redux';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import ProtectedRoutes from '../auth/protectedRoutes';
 import {
   APPOINTMENTS,
   BLOG,
@@ -11,9 +12,9 @@ import {
   PAYMENT_SUCCESS,
   PROFILE,
   SIGNUP,
-  VIEW_APPOINTMENT,
   CHAT,
   VIDEO_CALL,
+  EDIT_PROFILE,
 } from './pages';
 import './App.css';
 
@@ -39,17 +40,80 @@ function App() {
       </div>
       <Suspense fallback={<div className="loader" />}>
         <Routes>
-          <Route path="/" element={<HOME />} />
           <Route path="/login" element={<LOGIN />} />
           <Route path="/signup" element={<SIGNUP />} />
-          <Route path="/blogs" element={<BLOG />} />
-          <Route path="/book-appointment" element={<APPOINTMENTS />} />
-          <Route path="/doctors" element={<DOCTORS />} />
-          <Route path="/profile" element={<PROFILE />} />
-          <Route path="/view-appointment" element={<VIEW_APPOINTMENT />} />
-          <Route path="/success" element={<PAYMENT_SUCCESS />} />
-          <Route path="/chat" element={<CHAT />} />
-          <Route path="/Video-call" element={<VIDEO_CALL />} />
+          <Route
+            path="/"
+            element={(
+              <ProtectedRoutes>
+                <HOME />
+              </ProtectedRoutes>
+            )}
+          />
+          <Route
+            path="/blogs"
+            element={(
+              <ProtectedRoutes>
+                <BLOG />
+              </ProtectedRoutes>
+            )}
+          />
+          <Route
+            path="/book-appointment"
+            element={(
+              <ProtectedRoutes>
+                <APPOINTMENTS />
+              </ProtectedRoutes>
+            )}
+          />
+          <Route
+            path="/doctors"
+            element={(
+              <ProtectedRoutes>
+                <DOCTORS />
+              </ProtectedRoutes>
+            )}
+          />
+          <Route
+            path="/profile"
+            element={(
+              <ProtectedRoutes>
+                <PROFILE />
+              </ProtectedRoutes>
+            )}
+          />
+          <Route
+            path="/success"
+            element={(
+              <ProtectedRoutes>
+                <PAYMENT_SUCCESS />
+              </ProtectedRoutes>
+            )}
+          />
+          <Route
+            path="/chat"
+            element={(
+              <ProtectedRoutes>
+                <CHAT />
+              </ProtectedRoutes>
+            )}
+          />
+          <Route
+            path="/Video-call"
+            element={(
+              <ProtectedRoutes>
+                <VIDEO_CALL />
+              </ProtectedRoutes>
+            )}
+          />
+          <Route
+            path="/edit-profile"
+            element={(
+              <ProtectedRoutes>
+                <EDIT_PROFILE />
+              </ProtectedRoutes>
+            )}
+          />
         </Routes>
       </Suspense>
     </BrowserRouter>

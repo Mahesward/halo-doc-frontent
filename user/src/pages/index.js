@@ -6,11 +6,11 @@ const SIGNUP = lazy(() => import('./Signup'));
 const BLOG = lazy(() => import('./Blog'));
 const APPOINTMENTS = lazy(() => import('./Appointments'));
 const DOCTORS = lazy(() => import('./Doctors'));
-const VIEW_APPOINTMENT = lazy(() => import('./View_appointments'));
 const PROFILE = lazy(() => import('./Profile'));
 const PAYMENT_SUCCESS = lazy(() => import('./PaymentSuccess'));
 const CHAT = lazy(() => import('./Chat'));
 const VIDEO_CALL = lazy(() => import('./Video_Call'));
+const EDIT_PROFILE = lazy(() => import('./Edit_Profile'));
 
 export {
   HOME,
@@ -20,8 +20,8 @@ export {
   APPOINTMENTS,
   DOCTORS,
   PROFILE,
-  VIEW_APPOINTMENT,
   PAYMENT_SUCCESS,
   CHAT,
   VIDEO_CALL,
+  EDIT_PROFILE,
 };

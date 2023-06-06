@@ -1,12 +1,12 @@
 import { useFormik } from 'formik';
 import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
-import StripeCheckout from 'react-stripe-checkout';
 import { toast } from 'react-hot-toast';
 import { commonApi, userApi } from '../../configs/axios.config';
 import { APPOINTMENT_SCHEMA } from '../../validations';
 
 function BookingTab() {
+  const token = localStorage.getItem('token');
   const [symptomsInput, setSymptomsInput] = useState('');
   const [symptoms, setSymptoms] = useState([]);
   const [departmentOptions, setDepartmentOptions] = useState([]);
@@ -70,8 +70,11 @@ function BookingTab() {
     },
     validationSchema: APPOINTMENT_SCHEMA,
     onSubmit: async () => {
-      console.log(formik.values);
-      const res = await userApi.post('/book-appointment', formik.values);
+      const res = await userApi.post('/book-appointment', formik.values, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
       if (res.data.success) {
         formik.values.bookingId = res.data.id;
         setTabActive('payment');
@@ -96,7 +99,11 @@ function BookingTab() {
   };
 
   const handleGetDoctors = async (dept) => {
-    const res = await userApi.get(`/doctors-by-department?department=${dept}`);
+    const res = await userApi.get(`/doctors-by-department?department=${dept}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
     setDoctors(res.data.data);
   };
 
@@ -107,9 +114,12 @@ function BookingTab() {
       date,
       doctorId: formik.values.doctorId,
     };
-    const response = await userApi.post('/check-available-timing', data);
+    const response = await userApi.post('/check-available-timing', data, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
     setTimings(response.data.data.map((val) => val.time));
-    console.log(timings);
   };
 
   let appointmentTimes = null;
@@ -141,15 +151,18 @@ function BookingTab() {
     try {
       if (formik.values.date === '' || formik.values.time === '') {
         toast.error('please fill all fields');
-        console.log(formik.values);
         return;
       }
-      const res = await userApi.post('/payment', formik.values);
+      const res = await userApi.post('/payment', formik.values, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
       if (res.data.url) {
         window.location.href = res.data.url;
       }
     } catch (error) {
-      console.log(error);
+      toast.error('something went wrong');
     }
   };
 
@@ -393,7 +406,6 @@ function BookingTab() {
                   type="button"
                   className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
                   onClick={() => {
-                    console.log(formik.errors);
                     if (
                       formik.errors.date === 'Select a date' &&
                       !formik.errors.gender &&
