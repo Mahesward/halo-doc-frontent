@@ -44,7 +44,7 @@ function App() {
   }, []);
 
   return (
-    <div>
+    <div className="overflow-x-hidden">
       <BrowserRouter>
         <div>
           <Toaster position="top-center" reverseOrder={false} />
@@ -54,12 +54,14 @@ function App() {
           {isMobile ? <div>{shouldRenderSideNav && <BottomNavbar />}</div> : ''}
           <div className="flex w-screen">
             {!isMobile ? (
-              <div className={shouldRenderSideNav ? 'float-left' : ''}>{shouldRenderSideNav && <Sidebar />}</div>
+              <div className={shouldRenderSideNav ? 'float-left fixed' : ''}>
+                {shouldRenderSideNav && <Sidebar />}
+              </div>
             ) : (
               ''
             )}
 
-            <div className="w-full">
+            <div className="w-full md:ml-64">
               <Routes>
                 <Route path="/doctor/login" element={<LOGIN />} />
                 <Route

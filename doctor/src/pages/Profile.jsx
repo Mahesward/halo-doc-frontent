@@ -6,6 +6,7 @@ import { backend } from '../configs/axios.config';
 
 function Profile() {
   const profileData = useSelector((state) => state.data.value)[0];
+  const token = localStorage.getItem('token');
   const [modal, setModal] = useState(false);
   const [appoinmtent, setAppointment] = useState();
   const [leaveData, setLeaveData] = useState([]);
@@ -13,7 +14,11 @@ function Profile() {
 
   useEffect(() => {
     const getAppointments = async () => {
-      const res = await backend.get(`/appointment/get-appointments/${profileData._id}`);
+      const res = await backend.get(`/appointment/get-appointments/${profileData._id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
       if (res.data.success) setAppointment(res.data.data);
     };
     getAppointments();
@@ -32,6 +37,7 @@ function Profile() {
     const getDoctor = async () => {
       const result = await backend.get(`/get-doctor/${profileData._id}`);
       setLeaveData(result.data.doctor[0].leave);
+      console.log(leaveData);
     };
     getDoctor();
   }, []);

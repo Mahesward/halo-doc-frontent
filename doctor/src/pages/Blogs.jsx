@@ -14,7 +14,6 @@ function Blog() {
     const getBlogs = async () => {
       let data = await commonApi.get('/blogs/get-all-blogs');
       data = data.data.data;
-      console.log(data);
       setBlog(data.docs);
 
       setNextPage(data.hasNextPage);

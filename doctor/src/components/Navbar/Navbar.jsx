@@ -7,7 +7,6 @@ function Navbar() {
       <nav className="bg-white w-full border-gray-200">
         <div className="w-full flex flex-wrap items-center justify-between">
           <Link to="https://flowbite.com/" className="flex items-center">
-            {/* <img src="https://flowbite.com/docs/images/logo.svg" className="h-8 mr-3" alt="Flowbite Logo" /> */}
             <span className="self-center text-2xl font-semibold whitespace-nowrap">HALO-DOC</span>
           </Link>
           <div className="flex items-center md:order-2">
