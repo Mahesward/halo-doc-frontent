@@ -2,20 +2,20 @@
 import React from 'react';
 import Chart from 'react-apexcharts';
 
-function Graphs() {
-  const options = {
+function Graphs({ revenue }) {
+    const options = {
     chart: {
       id: 'basic-bar',
     },
     xaxis: {
-      categories: [1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998],
+      categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sept', 'Oct', 'Nov', 'Dec'],
     },
   };
 
   const series = [
     {
       name: 'series-1',
-      data: [30, 40, 45, 50, 49, 60, 70, 91],
+      data: revenue,
     },
   ];
   return (

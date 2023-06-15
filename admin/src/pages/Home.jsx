@@ -9,6 +9,7 @@ function Home() {
   const [female, setFemale] = useState();
   const [total, setTotal] = useState();
   const [revenue, setRevenue] = useState();
+  const [monthlyRevenue, setMonthlyRevenue] = useState([]);
 
   useEffect(() => {
     const getData = async () => {
@@ -19,10 +20,17 @@ function Home() {
       setMale(response.data.data.maleCount);
       setFemale(response.data.data.femaleCount);
       setTotal(response.data.data.total);
+
+      const getMonthlyData = async () => {
+        const data = await backendApi.get('/get-monthly-revenue');
+        setMonthlyRevenue(data?.data?.data);
+      };
+
+      getMonthlyData();
     };
 
     getData();
-  });
+  }, []);
   return (
     <>
       <Card total={total} revenue={revenue} />
@@ -31,7 +39,7 @@ function Home() {
           <DoughnutGraph male={male} female={female} />
         </div>
         <div className="col-span-2">
-          <Graphs male={male} female={0} />
+          <Graphs revenue={monthlyRevenue} />
         </div>
       </div>
     </>

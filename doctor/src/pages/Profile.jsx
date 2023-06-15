@@ -37,7 +37,6 @@ function Profile() {
     const getDoctor = async () => {
       const result = await backend.get(`/get-doctor/${profileData._id}`);
       setLeaveData(result.data.doctor[0].leave);
-      console.log(leaveData);
     };
     getDoctor();
   }, []);
@@ -72,14 +71,16 @@ function Profile() {
               </button>
             </div>
             <ul className="my-4 space-y-3">
-              <li>
-                <p
-                  to="/"
-                  className="flex items-center p-3 text-base font-bold text-gray-900 rounded-lg bg-gray-50 hover:bg-gray-100 group hover:shadow"
-                >
-                  sd
-                </p>
-              </li>
+              {leaveData.map((data) => (
+                <li>
+                  <p
+                    to="/"
+                    className="flex items-center p-3 text-base font-bold text-gray-900 rounded-lg bg-gray-50 hover:bg-gray-100 group hover:shadow"
+                  >
+                    {data}
+                  </p>
+                </li>
+              ))}
             </ul>
             <div>
               <Link
