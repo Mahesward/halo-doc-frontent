@@ -5,7 +5,6 @@ import Card from '../components/Card/Card';
 import { backend } from '../configs/axios.config';
 import Graphs from '../components/Graphs/Graphs';
 import Appointments from '../components/Appointments/AppointmentsList';
-import Navbar from '../components/Navbar/Navbar';
 
 function Home() {
   const user = useSelector((state) => state?.data?.value)[0];
@@ -30,7 +29,7 @@ function Home() {
   return (
     <>
       <Card total={total} revenue={revenue} />
-      <div className="grid md:grid-cols-3 sm:grid-cols-1 md:w-screen p-12">
+      <div className="grid md:grid-cols-3 sm:grid-cols-1 p-12">
         <div className="col-span-1">
           <DoughnutChat male={male} female={female} />
         </div>
@@ -38,7 +37,7 @@ function Home() {
           <Graphs male={male} female={female} />
         </div>
       </div>
-      <Appointments home={true} />
+      <Appointments home />
     </>
   );
 }

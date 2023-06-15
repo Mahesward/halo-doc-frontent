@@ -127,6 +127,12 @@ function AppointmentList({ home = false }) {
                       >
                         Cancel
                       </th>
+                      <th
+                        scope="col"
+                        className="px-4 py-3.5 text-sm font-normal text-left rtl:text-right text-gray-500"
+                      >
+                        Prescription
+                      </th>
                     </tr>
                   </thead>
                   <tbody className="bg-white divide-y divide-gray-200">
@@ -182,6 +188,14 @@ function AppointmentList({ home = false }) {
                             >
                               Cancel
                             </button>
+                          </td>
+                          <td className="px-4 py-4 whitespace-nowrap text-right text-sm font-medium">
+                            <Link
+                              to={`/doctor/add-prescription/${data._id}`}
+                              className="text-gray- border p-1 rounded-md hover:text-indigo-600"
+                            >
+                              Prescription
+                            </Link>
                           </td>
                         </tr>
                       ))}

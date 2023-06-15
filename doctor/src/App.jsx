@@ -61,7 +61,7 @@ function App() {
               ''
             )}
 
-            <div className="w-full md:ml-64">
+            <div className="w-5/6 md:ml-64">
               <Routes>
                 <Route path="/doctor/login" element={<LOGIN />} />
                 <Route
